@@ -3,7 +3,7 @@
 > Status: draft — fill in as we decide. Claude: append new requirements here, keep the headings.
 
 ## Must have
-- _TODO_
+- No grilles on the service yard / balcony openings (keep open, per HDB 3D render).
 
 ## Nice to have
 - _TODO_

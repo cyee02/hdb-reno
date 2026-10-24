@@ -27,23 +27,25 @@ Values with **~** were scaled from the photo rather than read from a printed dim
 | Suggested Study | 3425–5825 | 0–3350 | 2.40 × 3.35 m | Dashed walls on plan = optional, can be left open to living |
 | Bedroom 3 | 5825–8825 | 0–3350 | 3.00 × 3.35 m | Door from corridor |
 | Bedroom 2 | 8825–11825 | 0–3350 | 3.00 × 3.35 m | Door from corridor |
-| Main Bedroom | 11825–15125 | 0–4450 | 3.30 × 4.45 m | Door from corridor end; en-suite Bath 1 |
-| Corridor | ~8550–11825 | 3350–4450 | 1.1 m wide | Serves Bed 2, Bed 3, Main, Bath 2 |
-| Bath/WC 2 (common) | ~9170–11160 | 4450–~6380 | ~1.95 × 1.95 m | Door from corridor |
-| Bath/WC 1 (main) | ~11160–13570 | 4450–~6380 | ~2.25 × 1.95 m | Door from main bedroom |
+| Main Bedroom | 11825–15125 (+ lobby 10725–11825) | 0–4450 (lobby 3350–4450) | 3.30 × 4.45 m + lobby | Door sits **across the corridor** at x ≈ 10725, hinged on the Bedroom 2 side; opens into a small lobby that leads to the bedroom and en-suite Bath 1. Only window is on the façade; no window on the south wall beside Bath 1 |
+| Corridor | ~8530–10725 | 3350–4450 | 1.1 m wide | Serves Bed 2, Bed 3, Main, Bath 2 |
+| Bath/WC 2 (common) | ~9170–11160 | 4450–~6380 | ~1.95 × 1.95 m | Bi-fold door from corridor; small high window to air-con ledge side |
+| Bath/WC 1 (main) | ~11160–13570 | 4450–~6380 | ~2.25 × 1.95 m | Bi-fold door from main bedroom; window over air-con ledge |
 | Air-con ledge | ~10770–13860 | ~6380–~7250 | — | Outdoor condenser units |
-| Kitchen | ~4100–~8530 | ~6000–~8900 | ~4.5 × 2.9 m | Top edge dashed = can be open to dining |
-| Service Yard | ~8530–~9980 | ~6380–~8900 | ~1.45 × 2.5 m | Laundry; door from kitchen |
-| Household Shelter | ~-230–~1620 | ~4720–~7680 | ~1.6 × 2.7 m (int.) | Reinforced concrete — **cannot be hacked or drilled** |
-| Entrance / Foyer | ~1620–~4100 | ~4720–~7680 | ~2.4 m wide | Main door + gate on bottom edge |
+| Kitchen | ~4100–~8530 | ~6000–~8900 | ~4.5 × 2.9 m | Top edge dashed = can be open to dining. **No windows** |
+| Service Yard | ~8530–~9980 | ~6380–~8900 | ~1.45 × 2.5 m | Laundry; glass door from kitchen with a half-height window on each side (sill ~1100, top level with the door head); open (no grille) opening on east side to a drying ledge (to x ≈ 10650) with a 1 m parapet |
+| Household Shelter | ~-100–~1750 (outer) | ~4720–~7780 (outer) | ~1.35 × 2.56 m (int.) | Outer face flush with living-room west wall and entrance wall. Reinforced concrete — **cannot be hacked or drilled** |
+| Entrance / Foyer | ~1750–~4100 | ~4720–~7680 | ~2.4 m wide | Main door + gate on bottom edge |
 
 ## Structural notes
-- Dark filled blocks on the façade (at roughly x ≈ 0, 5900, 9200 and the right edge) are columns/fins — structural, cannot be removed.
-- The thick block between kitchen and Bath 2 (~x 8550–9170) is likely a structural wall / service duct.
+- Dark filled blocks on the façade (at roughly x ≈ 0, 5900, 9200 and the right edge) are columns/fins — structural, cannot be removed. Modelled as `columns` in the JSON, sticking out ~450 mm past the façade.
+- The thick block between the dining area and Bath 2 (~x 8455–9170, y 4450–6380) is likely a structural wall / service duct. Modelled as `rc_wall_bath2`: kept thick, but trimmed flush with the bath walls and lined up with the kitchen/service-yard wall so it reads as one straight wall (as in HDB's 3D render).
 - Household shelter walls, door and ceiling must not be altered (SCDF rules).
 - Note on plan: *"Please refer to block plan for position of fins/walls at external façade where applicable."*
 
 ## Assumptions used in the 3D model
 - Ceiling height 2600 mm.
 - External walls 200 mm, internal 150 mm, shelter 250 mm.
-- Doors 900 × 2100 mm (main door 1000 mm). Windows: sill 900 mm, head 2100 mm.
+- Doors 900 × 2100 mm (main door 1000 mm). Bathroom doors 700 mm bi-fold. Service-yard door is framed glass.
+- Façade windows: sill 900 mm, head 2300 mm, black frames with 4 (main bedroom 5) vertical panes and a top transom — based on HDB's 3D render. WC windows are small and high (WC 2 ~400 × 450, WC 1 ~800 × 800).
+- Toilet bowls and sinks in the WCs follow the positions drawn on the HDB plan (`fixtures` in the JSON, built by `build_fixtures.py`).

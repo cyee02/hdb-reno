@@ -3,7 +3,8 @@
 > Status: draft — fill in as we decide. Claude: append new requirements here, keep the headings.
 
 ## Must have
-- _TODO_
+- Bi-fold doors for both WCs (decided 2026-10-25).
+- Toilet bowl + sink in each WC. Model follows the HDB plan positions: WC 2 toilet against the party wall, sink on the south wall; WC 1 sink and toilet both against the party wall.
 
 ## Nice to have
 - _TODO_

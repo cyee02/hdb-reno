@@ -16,7 +16,7 @@
 - False ceiling / cove lighting?
 - Smart home (lights, aircon, locks)?
 - Aircon: how many fan coils, which rooms?
-- Doors: replace all bedroom doors? Colour?
+- Doors: replace all bedroom doors? Colour? (WC doors → bi-fold, decided 2026-10-25; bedroom doors stay swing)
 - Electrical: extra power points, data points, wifi mesh location
 
 ## Materials & finishes

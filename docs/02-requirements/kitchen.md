@@ -25,4 +25,4 @@
 | Ceiling / lighting | _TODO_ | |
 
 ## Open questions
-- _TODO_
+- Kitchen has **no window** (per HDB layout), so plan for a good cooker hood and ventilation/lighting via the service yard.
