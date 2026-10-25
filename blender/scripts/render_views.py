@@ -99,9 +99,14 @@ def main():
         "persp_south": camera(coll, "Cam_PerspSouth", CENTER + Vector((-1.0, -10.0, 15.0)), lens=24),
         "persp_north": camera(coll, "Cam_PerspNorth", CENTER + Vector((1.0, 10.0, 15.0)), lens=24),
     }
+    # Service yard close-ups from the ceiling corners: storage wall, then laundry side.
+    views["yard_storage"] = camera(coll, "Cam_YardStorage", Vector((9.85, -6.52, 2.35)), lens=14)
+    views["yard_laundry"] = camera(coll, "Cam_YardLaundry", Vector((9.8, -8.05, 2.4)), lens=13)
     views["topdown"].rotation_euler = (0, 0, 0)
     look_at(views["persp_south"], CENTER)
     look_at(views["persp_north"], CENTER)
+    look_at(views["yard_storage"], Vector((9.05, -8.55, 0.75)))
+    look_at(views["yard_laundry"], Vector((8.95, -6.75, 0.5)))
 
     os.makedirs(OUT, exist_ok=True)
     for key, cam in views.items():

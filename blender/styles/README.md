@@ -25,3 +25,5 @@ Rebuild the shell inside the style file. Your style collections are kept:
 ```bash
 /Applications/Blender.app/Contents/MacOS/Blender -b blender/styles/<style-name>.blend -P blender/scripts/build_flat.py -P blender/scripts/build_fixtures.py
 ```
+
+To add the service-yard carpentry and appliances to a style, also run `-P blender/scripts/build_service_yard.py` (finishes come from `blender/data/service_yard.json`).
