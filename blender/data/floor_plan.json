@@ -61,8 +61,10 @@
 
     {"id": "bath_north", "from": [8530, 4450], "to": [13570, 4450], "thickness": 150,
      "openings": [
-       {"type": "door", "style": "bifold", "at": [9800, 10500], "hinge": "start", "swing": 1},
-       {"type": "door", "style": "bifold", "at": [12450, 13150], "hinge": "end", "swing": 1}
+       {"type": "door", "style": "bifold", "at": [9240, 9940], "hinge": "start", "swing": 1,
+        "note": "Per HDB plan the WC2 bi-fold starts right at the WC2 west wall (moved ~560 west on 2026-10-25)."},
+       {"type": "door", "style": "bifold", "at": [11950, 12650], "hinge": "end", "swing": 1,
+        "note": "Per HDB plan the WC1 bi-fold sits ~800 from the WC1 west wall (moved 500 west on 2026-10-25), leaving ~920 inside to the left (east) as you enter."}
      ]},
     {"id": "bath_party", "from": [11160, 4450], "to": [11160, 6380], "thickness": 150},
     {"id": "bath_south", "from": [8530, 6380], "to": [13570, 6380], "thickness": 150,

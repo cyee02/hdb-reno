@@ -4,6 +4,8 @@ Newest first. One entry per decision.
 
 | Date | Area | Decision | Why | Cost (SGD) |
 |---|---|---|---|---|
+| 2026-10-25 | Model | Bathroom bi-fold doors moved west to match the HDB plan: WC 1 to x 11950–12650 (~920 mm to the left as you enter), WC 2 to x 9240–9940 (right at its west wall); base snapshot refreshed | Both doors were drawn ~500 mm too far east | — |
+| 2026-10-25 | Main bedroom | Two layout options from the owner's sketches, **to choose between**: Design 1 = bed along the window (headboard east), long table, L-wardrobe in the SE corner, TV on the west wall; Design 2 (enhanced) = west wall vanity (no mirror) / bracket-and-pole hanging area with wire baskets behind white bi-fold doors / cupboard 2 (towels + boxes), full-length mirror on the lobby's south wall, hook rail on the south wall, 34" monitor on the back of the feature wall, headboard on the window wall, timber-slat TV feature wall with an L-shaped study table (no cabinets below, wall cabinets above) and 2 office chairs. Design 3 dropped | Compare before deciding | — |
 | 2026-10-25 | Household shelter | Door outer face (foyer / living side) becomes a full-length stick-on magnetic whiteboard | Use the door as a family board; no drilling allowed | — |
 | 2026-10-25 | Household shelter | Free-standing L-shaped full-height rack along the west (600 D) and south (450 D) walls, shelves from 950 mm up | Storage above, luggage + kids' bike below | — |
 | 2026-10-25 | Service yard | iPad platform: full-length floating plank (1300 × 160 × 25, concealed brackets) at the back of the folding counter, top at 1000 mm from the floor, with a mini cactus | Watch shows while folding without losing counter space | — |

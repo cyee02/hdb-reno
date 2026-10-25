@@ -1,0 +1,469 @@
+{
+  "meta": {
+    "design": "Design 2 (enhanced)",
+    "units": "mm, plan coordinates (same as floor_plan.json: +x right, +y down the page)",
+    "built_by": "blender/scripts/build_main_bedroom.py (MB_DESIGN=2)",
+    "layout": "Per owner's sketch 'Design 2' v2 (2026-10-25): west wall = 600 vanity (window end) | dividing wall | bracket-and-pole hanging system behind bi-fold doors (with a stack of wire baskets) | full-height 'cupboard 2' facing the lobby/WC (towels below, open middle, boxes on top); full-length mirror on the lobby's south wall (on your right as you enter). Queen bed top-right, headboard on the window wall; TV feature wall at the foot of the bed; L-shaped study table behind it (no cabinets below) with wall cabinets above on the east wall; 2 office chairs. Hook rail on the south wall between the study table and the WC door; 34\" monitor on the back of the feature wall.",
+    "orientation": "North = facade/window wall (top of plan). East = facade side wall (right). South = Bath/WC 1 wall with the WC door at x 11950-12650. West = Bedroom 2 wall; lobby + room door to the south-west.",
+    "inspiration": "Hanging area: open metal wardrobe system (wall standards + brackets, poles, wire shelf, pull-out wire baskets) behind white bi-fold doors, like the owner's reference photos.",
+    "note": "Product sizes are typical catalogue sizes; confirm before ordering."
+  },
+  "interior": {
+    "x": [
+      11900,
+      15025
+    ],
+    "y": [
+      100,
+      4350
+    ],
+    "ceiling": 2600,
+    "window": {
+      "x": [
+        12000,
+        14750
+      ],
+      "sill": 900
+    },
+    "note": "Wall-face to wall-face, assuming 150 mm internal / 200 mm external walls: ~3125 W x 4250 L. Verify on site."
+  },
+  "finishes": {
+    "carcass": [
+      0.93,
+      0.92,
+      0.89
+    ],
+    "front": [
+      0.93,
+      0.92,
+      0.89
+    ],
+    "wood": [
+      0.62,
+      0.47,
+      0.32
+    ],
+    "fabric": [
+      0.55,
+      0.57,
+      0.55
+    ],
+    "linen": [
+      0.95,
+      0.95,
+      0.93
+    ]
+  },
+  "bed": {
+    "size": "Queen 1530 x 1910 (SG queen 152 x 190 cm)",
+    "rect": [
+      13495,
+      100,
+      15025,
+      2090
+    ],
+    "headboard": {
+      "side": "north",
+      "thickness": 80,
+      "height": 900
+    },
+    "frame_height": 300,
+    "mattress": 250,
+    "note": "Headboard on the window wall, kept to the 900 mm sill. Get in from the left (west) side - ~945 mm aisle to the glass doors."
+  },
+  "vanity": {
+    "axis": "y",
+    "back": 11900,
+    "front": "east",
+    "depth": 500,
+    "span": [
+      100,
+      700
+    ],
+    "top": 750,
+    "stool": {
+      "at": [
+        12500,
+        450
+      ],
+      "size": 380
+    },
+    "note": "600 mm vanity at the window end of the west wall (shared cosmetics): floating top fixed to the walls on three sides, open below for the stool. No drawers, no mirror. Daylight from the window on its left."
+  },
+  "partitions": [
+    {
+      "name": "Wall between the vanity and the hanging area",
+      "rect": [
+        11900,
+        700,
+        12550,
+        760
+      ],
+      "height": 2600
+    }
+  ],
+  "pole_closet": {
+    "back": 11900,
+    "span": [
+      760,
+      2800
+    ],
+    "depth": 600,
+    "standard_spacing": 700,
+    "shelf": {
+      "z": 2050,
+      "depth": 400
+    },
+    "upper_pole": {
+      "z": 1900,
+      "d": 300
+    },
+    "lower_pole": {
+      "z": 1000,
+      "d": 300,
+      "span": [
+        760,
+        1780
+      ]
+    },
+    "note": "Not carpentry: wall-mounted standards + brackets holding hanging poles and a wire shelf on top (like the reference photo). Upper pole full length (2040). Window end: lower pole at 1000 for double-hang. Middle: stack of 4 pull-out wire baskets (to ~870) under short hang. Toilet end: long hang.",
+    "baskets": {
+      "span": [
+        1780,
+        2290
+      ],
+      "depth": 500,
+      "height": 170,
+      "levels": [
+        100,
+        300,
+        500,
+        700
+      ]
+    }
+  },
+  "bifold": {
+    "x": 12525,
+    "span": [
+      760,
+      2800
+    ],
+    "height": 2600,
+    "open": [
+      0.0,
+      1.0,
+      0.5
+    ],
+    "note": "White bi-fold doors (3 pairs, ~340 leaves) across the hanging area, like the reference video. Drawn: window pair closed, middle pair fully folded, toilet-end pair half open. Each pair folds out ~340 into the ~945 aisle."
+  },
+  "wardrobe": {
+    "height": 2600,
+    "depth": 550,
+    "board": 18,
+    "top_cabinet": 2050,
+    "show_doors": false,
+    "long_hang_rod": 1850,
+    "short_hang_rod": 1750,
+    "drawers_top": 700,
+    "utility": {
+      "towel_shelves": [
+        300,
+        600,
+        850
+      ],
+      "upper_shelf": 1600
+    },
+    "legs": [
+      {
+        "name": "Cupboard 2",
+        "axis": "x",
+        "back": 2800,
+        "front": "south",
+        "span": [
+          11900,
+          12550
+        ],
+        "sections": [
+          {
+            "kind": "utility",
+            "width": 650,
+            "owner": "Shared",
+            "note": "Full height, facing the lobby / WC: towels on shelves below 850, open middle 850-1600, boxes / seldom-used items above 1600."
+          }
+        ]
+      }
+    ]
+  },
+  "mirrors": [
+    {
+      "name": "Full-length mirror",
+      "wall": "south",
+      "wall_y": 4375,
+      "x": [
+        11150,
+        11750
+      ],
+      "z": [
+        100,
+        1900
+      ],
+      "note": "Lobby south wall - on your right as you walk in from the room door (clear of the door swing)."
+    }
+  ],
+  "feature_wall": {
+    "rect": [
+      13400,
+      2120,
+      15025,
+      2270
+    ],
+    "height": 2600,
+    "slats": {
+      "width": 40,
+      "gap": 40,
+      "depth": 20
+    },
+    "note": "Full-height timber-slat feature wall (150 thick) at the foot of the bed. TV on the bed side, study table on the other side. Conceals TV cabling."
+  },
+  "tv": {
+    "size": "50-inch, mounted on the feature wall",
+    "faces": "north",
+    "wall_y": 2100,
+    "center_x": 14260,
+    "width": 1110,
+    "height": 640,
+    "center_z": 1150,
+    "note": "Centred on the bed, on the slat face. ~1.7 m from the pillows, so 50\"."
+  },
+  "l_desk": {
+    "top": 750,
+    "thickness": 30,
+    "tops": [
+      [
+        13400,
+        2270,
+        15025,
+        2800
+      ],
+      [
+        14505,
+        2800,
+        15025,
+        4350
+      ]
+    ],
+    "panels": [
+      [
+        13400,
+        2270,
+        13430,
+        2800
+      ],
+      [
+        14505,
+        4320,
+        15025,
+        4350
+      ]
+    ],
+    "posts": [
+      [
+        14505,
+        2800
+      ]
+    ],
+    "overhead": {
+      "rect": [
+        14675,
+        2270,
+        15025,
+        4350
+      ],
+      "z": [
+        1450,
+        2600
+      ],
+      "doors": 4
+    },
+    "chairs": [
+      {
+        "at": [
+          13950,
+          3150
+        ],
+        "faces": "north"
+      },
+      {
+        "at": [
+          14100,
+          3900
+        ],
+        "faces": "east"
+      }
+    ],
+    "note": "L-shaped study table, no cabinets below: 1625 x 530 along the back of the feature wall + 1550 x 520 along the east wall. Wall cabinets (350 D, 1450 to ceiling) above the east-wall leg. Two office chairs: one facing the feature wall, one facing the east wall."
+  },
+  "cameras": {
+    "mbr_overview": {
+      "loc": [
+        12.6,
+        -0.3,
+        2.35
+      ],
+      "target": [
+        14.3,
+        -2.2,
+        0.9
+      ],
+      "lens": 14,
+      "note": "bed + TV feature wall"
+    },
+    "mbr_study": {
+      "loc": [
+        12.75,
+        -4.2,
+        2.2
+      ],
+      "target": [
+        14.5,
+        -3.0,
+        0.9
+      ],
+      "lens": 14,
+      "note": "L-shaped study area with 2 chairs"
+    },
+    "mbr_wardrobe": {
+      "loc": [
+        13.3,
+        -2.6,
+        1.8
+      ],
+      "target": [
+        11.9,
+        -1.6,
+        1.1
+      ],
+      "lens": 14,
+      "note": "bi-fold hanging area + baskets"
+    },
+    "mbr_vanity": {
+      "loc": [
+        13.2,
+        -0.75,
+        1.6
+      ],
+      "target": [
+        12.0,
+        -0.4,
+        0.8
+      ],
+      "lens": 16,
+      "note": "vanity at the window end"
+    },
+    "mbr_cupboard2": {
+      "loc": [
+        12.9,
+        -4.2,
+        1.7
+      ],
+      "target": [
+        12.0,
+        -3.1,
+        1.1
+      ],
+      "lens": 15,
+      "note": "cupboard 2 + lobby mirror"
+    },
+    "mbr_hooks": {
+      "loc": [
+        13.7,
+        -2.95,
+        1.75
+      ],
+      "target": [
+        13.85,
+        -4.35,
+        1.3
+      ],
+      "lens": 16,
+      "note": "hook rail on the south wall"
+    },
+    "mbr_mirror": {
+      "loc": [
+        10.9,
+        -3.9,
+        1.6
+      ],
+      "target": [
+        12.0,
+        -4.25,
+        1.2
+      ],
+      "lens": 14,
+      "note": "walking in: full-length mirror on the right"
+    },
+    "mbr_monitor": {
+      "loc": [
+        14.35,
+        -3.25,
+        1.4
+      ],
+      "target": [
+        13.95,
+        -2.4,
+        1.05
+      ],
+      "lens": 22,
+      "note": "PRISM+ X340 PRO on its wall arm, from beside the first chair"
+    }
+  },
+  "hook_rail": {
+    "x": [
+      13300,
+      14400
+    ],
+    "wall_y": 4350,
+    "z": 1650,
+    "hooks": 7,
+    "items": [
+      {
+        "hook": 1,
+        "kind": "towel",
+        "width": 350,
+        "length": 600
+      },
+      {
+        "hook": 3,
+        "kind": "bag",
+        "width": 380,
+        "length": 350
+      },
+      {
+        "hook": 5,
+        "kind": "clothes",
+        "width": 450,
+        "length": 800
+      }
+    ],
+    "note": "Timber hook rail on the south wall between the end of the study table and the WC door, for towels, bags and clothes. Hooks at 1650."
+  },
+  "monitor": {
+    "model": "PRISM+ X340 PRO (34-inch 21:9 curved, 3440 x 1440)",
+    "center_x": 13950,
+    "wall_y": 2270,
+    "center_z": 1080,
+    "width": 810,
+    "height": 361,
+    "curve_radius": 1500,
+    "panel_depth": 16,
+    "housing_depth": 60,
+    "bezel": [
+      8,
+      8,
+      22
+    ],
+    "vesa": 100,
+    "standoff": 80,
+    "note": "Per PRISM+ listing: ~810 x 361 mm without stand, 1500R, VESA 100 x 100 (needs custom spacers). Total depth ~132 incl. curve + back housing (listings vary: 72 / 132). Mounted on a VESA wall arm on the back of the feature wall; the included stand is not used. Bottom edge ~150 above the desk."
+  }
+}
