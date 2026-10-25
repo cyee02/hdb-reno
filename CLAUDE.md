@@ -44,7 +44,7 @@ Renders go to `blender/renders/`. Render cameras + the sun live in the `Cameras`
 
 ## Viewing tools
 
-`blender/tools/hdb_view_tools.py` (installed add-on): **Alt+W** in the 3D viewport toggles the walls + windows on/off (viewport only, renders unaffected). Also a button in the N panel > **HDB Reno** tab.
+`blender/tools/hdb_view_tools.py` (installed add-on): **Alt+W** in the 3D viewport toggles the walls + windows on/off; **Shift+Alt+P** jumps to the plan view (top-down orthographic, north up, framed on the whole flat). Viewport only, renders unaffected. Also buttons in the N panel > **HDB Reno** tab.
 
 ## Blender MCP (live editing)
 
