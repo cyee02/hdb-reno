@@ -229,6 +229,28 @@ def build_door(wall, op, i, horizontal, fixed, d, open_c, mats):
         mesh_object(name, bm, mats["door"], open_c)
         return
 
+    if style == "sliding":
+        # Leaves run on a track on one face of the wall (sw = which side).
+        # Two panels = bi-parting (opens in the middle). Drawn `open` fraction open.
+        t, lap = 40, 25
+        across = sw * (off + 10 + t / 2)
+        n = op.get("panels", 2)
+        f = op.get("open", 0.75)
+        fbm, gbm = bmesh.new(), bmesh.new()
+        if n == 2:
+            mid = (s + e) / 2
+            leaves = [(s - lap - f * w / 2, mid - f * w / 2), (mid + f * w / 2, e + lap + f * w / 2)]
+            track = (s - lap - w / 2, e + lap + w / 2)
+        else:
+            leaves = [(s - lap - f * w, e + lap - f * w)]
+            track = (s - lap - w, e + lap)
+        for a0, a1 in leaves:
+            glass_panel(fbm, gbm, pt(a0, across), pt(a1, across), t, 0, z1)
+        add_prism(fbm, pt(track[0], across), pt(track[1], across), 60, z1, z1 + 50)
+        mesh_object(name, fbm, mats["frame"], open_c)
+        mesh_object(f"{name}_glass", gbm, mats["glass"], open_c)
+        return
+
     # Single leaf drawn open at 90 degrees from its hinge.
     leaf_t = 40
     a = hinge + u * leaf_t / 2

@@ -79,7 +79,8 @@
     {"id": "kitchen_yard", "from": [8530, 6380], "to": [8530, 8900], "thickness": 150,
      "openings": [
        {"type": "window", "at": [6500, 7300], "sill": 1100, "head": 2100, "cols": 1, "transom": 0},
-       {"type": "door", "style": "glass", "at": [7350, 8150], "hinge": "end", "swing": 1},
+       {"type": "door", "style": "sliding", "at": [7350, 8150], "swing": -1, "panels": 2, "open": 0.75,
+        "note": "Bi-parting glass sliding door; both leaves slide on the kitchen side (swing -1). Top-hung, no floor track, so the robot vacuum can cross."},
        {"type": "window", "at": [8200, 8780], "sill": 1100, "head": 2100, "cols": 1, "transom": 0}
      ]},
     {"id": "yard_east", "from": [9980, 6380], "to": [9980, 8900], "thickness": 150, "side": "out",

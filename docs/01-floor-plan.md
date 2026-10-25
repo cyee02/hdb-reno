@@ -33,7 +33,7 @@ Values with **~** were scaled from the photo rather than read from a printed dim
 | Bath/WC 1 (main) | ~11160–13570 | 4450–~6380 | ~2.25 × 1.95 m | Bi-fold door from main bedroom; window over air-con ledge |
 | Air-con ledge | ~10770–13860 | ~6380–~7250 | — | Outdoor condenser units |
 | Kitchen | ~4100–~8530 | ~6000–~8900 | ~4.5 × 2.9 m | Top edge dashed = can be open to dining. **No windows** |
-| Service Yard | ~8530–~9980 | ~6380–~8900 | ~1.45 × 2.5 m | Laundry; glass door from kitchen with a half-height window on each side (sill ~1100, top level with the door head); open (no grille) opening on east side to a drying ledge (to x ≈ 10650) with a 1 m parapet |
+| Service Yard | ~8530–~9980 | ~6380–~8900 | ~1.45 × 2.5 m | Laundry; bi-parting glass **sliding** door from the kitchen (leaves slide on the kitchen side) with a half-height window on each side (sill ~1100, top level with the door head); open (no grille) opening on east side to a drying ledge (to x ≈ 10650) with a 1 m parapet |
 | Household Shelter | ~-100–~1750 (outer) | ~4720–~7780 (outer) | ~1.35 × 2.56 m (int.) | Outer face flush with living-room west wall and entrance wall. Reinforced concrete — **cannot be hacked or drilled** |
 | Entrance / Foyer | ~1750–~4100 | ~4720–~7680 | ~2.4 m wide | Main door + gate on bottom edge |
 

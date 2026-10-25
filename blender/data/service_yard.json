@@ -1,0 +1,180 @@
+{
+  "meta": {
+    "units": "mm, plan coordinates (same as floor_plan.json: +x right, +y down the page)",
+    "built_by": "blender/scripts/build_service_yard.py",
+    "orientation": "You enter from the kitchen (west wall) facing east. Left = north end (bath wall), right = south end (kitchen external wall).",
+    "note": "Product sizes are typical catalogue sizes; confirm against the exact models before carpentry is fabricated."
+  },
+  "interior": {
+    "x": [8605, 9905],
+    "y": [6455, 8775],
+    "ceiling": 2600,
+    "note": "Wall-face to wall-face, assuming 150 mm internal / 250 mm external walls: 1300 W x 2320 L. Verify on site."
+  },
+  "finishes": {
+    "carcass": [0.2, 0.14, 0.1],
+    "front": [0.17, 0.12, 0.085],
+    "counter": [0.9, 0.89, 0.86]
+  },
+  "laundry_counter": {
+    "rect": [8605, 6455, 9905, 7135],
+    "top": 920,
+    "thickness": 30,
+    "note": "Folding top over washer + dryer, wall to wall. Needs ledger supports on the 3 walls."
+  },
+  "front_loaders": [
+    {
+      "name": "Washer",
+      "rect": [8630, 6505, 9230, 7105],
+      "height": 850,
+      "note": "Front-load washer ~600 W x 600 D x 850 H"
+    },
+    {
+      "name": "Dryer",
+      "rect": [9280, 6505, 9880, 7105],
+      "height": 850,
+      "note": "Front-load heat-pump (ventless) dryer ~600 W x 600 D x 850 H"
+    }
+  ],
+  "tall_cabinet": {
+    "rect": [8605, 8175, 9345, 8775],
+    "height": 2300,
+    "board": 18,
+    "dyson_column": [8623, 8893],
+    "robot_column": [8911, 9327],
+    "divider_top": 1350,
+    "robot_bay_height": 650,
+    "robot_column_shelves": [1150],
+    "dyson_column_shelves": [1350],
+    "hanger_rod_height": 1900,
+    "top_shelf": 1980,
+    "show_doors": false,
+    "note": "Front faces north. Per owner's sketch, seen from the yard: LEFT column (east, next to sink) = robot bay at floor, then detergent bottles + plastic-bag basket, then pegs / mesh bags; RIGHT column (west) = Dyson niche with laundry-pods basket on top. Full-width hanger rod at 1900 (hangers only), top shelf for overstock. Doors not drawn so the inside is visible."
+  },
+  "robot_vacuum": {
+    "dock_rect": [8949, 8460, 9289, 8770],
+    "dock_height": 560,
+    "robot_center": [9119, 8380],
+    "robot_diameter": 350,
+    "note": "Self-emptying / self-washing dock with water hookup kit: water inlet point + floor drain behind the dock."
+  },
+  "stick_vacuum": {
+    "at": [8758, 8600],
+    "note": "Dyson cordless on floor dock, ~250 W x 1260 H; charging socket inside niche."
+  },
+  "utility_sink": {
+    "rect": [9345, 8175, 9905, 8775],
+    "top": 920,
+    "basin": [9395, 8250, 9855, 8670],
+    "basin_depth": 300,
+    "note": "Hand-wash laundry / shoe sink: 560 W unit, stainless undermount basin 460 x 420 x 300 deep (fits a shoe)."
+  },
+  "ceiling_rack": {
+    "name": "Steigen Solar Mini",
+    "body_rect": [9005, 6765, 9505, 7865],
+    "body_height": 90,
+    "poles_x": [8975, 9535],
+    "poles_y": [6490, 8140],
+    "clearance_rect": [8955, 6415, 9555, 8215],
+    "note": "Body 1100 x 500 mm; install clearance 1100 x 600 body / up to 1800 extended; product max length 1650 (drawn). Centred over the walkway + folding counter so it never lowers onto the tall cabinet."
+  },
+  "accessories": [
+    {
+      "type": "hangers",
+      "name": "Hangers",
+      "x": [8650, 8870],
+      "count": 9,
+      "note": "Stored on the rod for easy grab"
+    },
+    {
+      "type": "basket",
+      "name": "Laundry pods basket",
+      "rect": [8640, 8300, 8876, 8640],
+      "z": 1368,
+      "height": 170,
+      "color": [0.62, 0.47, 0.3]
+    },
+    {
+      "type": "bottle",
+      "name": "Detergent",
+      "rect": [8930, 8300, 9040, 8460],
+      "z": 668,
+      "height": 320,
+      "color": [0.2, 0.4, 0.8]
+    },
+    {
+      "type": "bottle",
+      "name": "Softener",
+      "rect": [9050, 8300, 9160, 8460],
+      "z": 668,
+      "height": 320,
+      "color": [0.92, 0.92, 0.95]
+    },
+    {
+      "type": "basket",
+      "name": "Reusable plastic bags basket",
+      "rect": [9170, 8250, 9320, 8600],
+      "z": 668,
+      "height": 220,
+      "color": [0.85, 0.85, 0.82]
+    },
+    {
+      "type": "basket",
+      "name": "Pegs bin",
+      "rect": [8930, 8250, 9110, 8500],
+      "z": 1168,
+      "height": 140,
+      "color": [0.55, 0.75, 0.7],
+      "suggested": true
+    },
+    {
+      "type": "basket",
+      "name": "Laundry mesh bags bin",
+      "rect": [9130, 8250, 9320, 8560],
+      "z": 1168,
+      "height": 160,
+      "color": [0.8, 0.8, 0.8],
+      "suggested": true
+    },
+    {
+      "type": "basket",
+      "name": "Overstock refills box",
+      "rect": [8640, 8250, 9000, 8700],
+      "z": 1998,
+      "height": 250,
+      "color": [0.75, 0.7, 0.62],
+      "suggested": true
+    },
+    {
+      "type": "basket",
+      "name": "Spare sponges + gloves box",
+      "rect": [9020, 8250, 9320, 8700],
+      "z": 1998,
+      "height": 200,
+      "color": [0.75, 0.7, 0.62],
+      "suggested": true
+    },
+    {
+      "type": "tablet",
+      "name": "iPad",
+      "x": [9131, 9379],
+      "base": [6590, 1000],
+      "lean_to": [6505, 1170],
+      "color": [0.08, 0.08, 0.09]
+    },
+    {
+      "type": "cactus",
+      "name": "Mini cactus",
+      "at": [9450, 6530],
+      "z": 1000,
+      "color": [0.33, 0.55, 0.3]
+    }
+  ],
+  "ipad_platform": {
+    "rect": [8605, 6455, 9905, 6615],
+    "top": 1000,
+    "board": 25,
+    "floating": true,
+    "note": "Floating plank on concealed wall brackets along the back of the folding counter: full length (1300) x 160 deep x 25 thick, top at 1000 mm from the floor (~55 mm gap above the counter). Holds the iPad + mini cactus; ~520 of the 680 counter depth stays clear for folding."
+  }
+}
