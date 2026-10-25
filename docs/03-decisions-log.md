@@ -4,6 +4,8 @@ Newest first. One entry per decision.
 
 | Date | Area | Decision | Why | Cost (SGD) |
 |---|---|---|---|---|
+| 2026-10-25 | Household shelter | Door outer face (foyer / living side) becomes a full-length stick-on magnetic whiteboard | Use the door as a family board; no drilling allowed | — |
+| 2026-10-25 | Household shelter | Free-standing L-shaped full-height rack along the west (600 D) and south (450 D) walls, shelves from 950 mm up | Storage above, luggage + kids' bike below | — |
 | 2026-10-25 | Service yard | iPad platform: full-length floating plank (1300 × 160 × 25, concealed brackets) at the back of the folding counter, top at 1000 mm from the floor, with a mini cactus | Watch shows while folding without losing counter space | — |
 | 2026-10-25 | Service yard | Tall cabinet arranged per owner's sketch: robot bay + bottles + plastic-bag basket (left), Dyson + laundry-pods basket (right), hanger rod across the top for hangers only | Easy access to everyday laundry items | — |
 | 2026-10-25 | Service yard | Utility sink enlarged to a 460 × 420 × 300 deep basin (560 W unit) | Must fit a shoe | — |
