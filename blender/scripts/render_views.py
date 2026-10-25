@@ -102,11 +102,16 @@ def main():
     # Service yard close-ups from the ceiling corners: storage wall, then laundry side.
     views["yard_storage"] = camera(coll, "Cam_YardStorage", Vector((9.85, -6.52, 2.35)), lens=14)
     views["yard_laundry"] = camera(coll, "Cam_YardLaundry", Vector((9.8, -8.05, 2.4)), lens=13)
+    # Household shelter: inside from just behind the door, and the whiteboard door from the living room.
+    views["shelter_rack"] = camera(coll, "Cam_ShelterRack", Vector((1.45, -5.6, 1.75)), lens=13)
+    views["shelter_door"] = camera(coll, "Cam_ShelterDoor", Vector((2.6, -2.4, 1.5)), lens=20)
     views["topdown"].rotation_euler = (0, 0, 0)
     look_at(views["persp_south"], CENTER)
     look_at(views["persp_north"], CENTER)
     look_at(views["yard_storage"], Vector((9.05, -8.55, 0.75)))
     look_at(views["yard_laundry"], Vector((8.95, -6.75, 0.5)))
+    look_at(views["shelter_rack"], Vector((0.45, -6.9, 0.9)))
+    look_at(views["shelter_door"], Vector((2.0, -5.5, 1.05)))
 
     os.makedirs(OUT, exist_ok=True)
     for key, cam in views.items():

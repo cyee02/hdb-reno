@@ -1,0 +1,49 @@
+{
+  "meta": {
+    "units": "mm, plan coordinates (same as floor_plan.json: +x right, +y down the page)",
+    "built_by": "blender/scripts/build_household_shelter.py",
+    "orientation": "Door is on the east wall (opens out to the foyer). Inside: west wall = facade side, south wall = entrance side.",
+    "rules": "SCDF: shelter walls, door and ceiling must not be hacked, drilled or altered. Everything here is free-standing or adhesive/magnetic only.",
+    "note": "Sizes follow the owner's sketch; confirm interior on site before ordering a made-to-measure rack."
+  },
+  "interior": {
+    "x": [150, 1500],
+    "y": [4970, 7530],
+    "ceiling": 2600,
+    "note": "Wall-face to wall-face from 250 mm shelter walls: 1350 W x 2560 L. Verify on site."
+  },
+  "whiteboard": {
+    "door_leaf": "Door_shelter_east_0",
+    "inset": 30,
+    "bottom": 40,
+    "top": 2060,
+    "thickness": 3,
+    "note": "Full-length magnetic whiteboard sheet / film stuck on the door's outer (foyer/living) face. No screws. Keep it off the rubber seal and cut around the handle."
+  },
+  "rack": {
+    "type": "Free-standing boltless steel rack, made to measure, white powder coat",
+    "gap_to_wall": 10,
+    "post": 35,
+    "shelf_thickness": 25,
+    "shelves": [950, 1330, 1710, 2090, 2470],
+    "low_tie": 150,
+    "note": "Top shelf (2470) is a cap, ~130 below the ceiling. No shelves below 950 so luggage and the kids' bike go underneath. Back + side tie bars at 150 mm (front left open so things roll in). Units bolted to each other, not to the walls.",
+    "units": [
+      {"name": "West_1", "rect": [150, 4970, 750, 6250], "open_side": "east", "note": "1280 long bay so a kids' bike fits underneath"},
+      {"name": "West_2", "rect": [150, 6250, 750, 7080], "open_side": "east"},
+      {"name": "Corner", "rect": [150, 7080, 750, 7530], "open_side": "east"},
+      {"name": "South", "rect": [750, 7080, 1500, 7530], "open_side": "north"}
+    ]
+  },
+  "under_rack": [
+    {"name": "KidsBike", "kind": "bike", "at": [450, 5610], "length": 1100, "wheel": 400, "bar_height": 700, "note": "16-inch kids' bike, lengthwise along the west wall"},
+    {"name": "Luggage_Large", "kind": "luggage", "rect": [250, 6400, 750, 6700], "height": 780, "color": [0.15, 0.25, 0.4]},
+    {"name": "Luggage_Medium", "kind": "luggage", "rect": [250, 6750, 680, 7020], "height": 680, "color": [0.55, 0.15, 0.15]},
+    {"name": "Luggage_Cabin", "kind": "luggage", "rect": [850, 7250, 1250, 7480], "height": 560, "color": [0.2, 0.2, 0.2]}
+  ],
+  "boxes": {
+    "note": "Illustrative storage boxes on the shelves",
+    "color": [0.85, 0.82, 0.75],
+    "height": 280
+  }
+}

@@ -32,7 +32,7 @@ This repo tracks the renovation of our HDB 5-room flat. It has two halves:
 Rebuild the model and render (headless):
 
 ```bash
-/Applications/Blender.app/Contents/MacOS/Blender -b blender/hdb-reno.blend -P blender/scripts/build_flat.py -P blender/scripts/build_fixtures.py -P blender/scripts/build_service_yard.py -P blender/scripts/render_views.py
+/Applications/Blender.app/Contents/MacOS/Blender -b blender/hdb-reno.blend -P blender/scripts/build_flat.py -P blender/scripts/build_fixtures.py -P blender/scripts/build_service_yard.py -P blender/scripts/build_household_shelter.py -P blender/scripts/render_views.py
 ```
 
 Open the `.blend` (as above) so other collections are kept; without it Blender starts from an empty scene and the save overwrites the file with only what the scripts build. Close the file in the Blender app first, or use the MCP route below, so the two don't overwrite each other.
@@ -46,4 +46,4 @@ Renders go to `blender/renders/`. The `.blend` file is saved to `blender/hdb-ren
 The `blender` MCP server (open-source `blender-mcp`) lets Claude control a running Blender.
 1. Open Blender, press `N` in the 3D viewport → **MCP for Blender** tab → **Connect** (add-on source: `blender/tools/blender_mcp_addon.py`, already installed).
 2. In Claude, use the `blender` MCP tools (e.g. `get_scene_info`, `execute_blender_code`).
-To rebuild via MCP, run `blender/scripts/build_flat.py`, `build_fixtures.py`, then any room scripts (e.g. `build_service_yard.py`) with `execute_blender_code`, then save the file (it finds the JSON via the `HDB_RENO_ROOT` path set at the top of the script).
+To rebuild via MCP, run `blender/scripts/build_flat.py`, `build_fixtures.py`, then any room scripts (e.g. `build_service_yard.py`, `build_household_shelter.py`) with `execute_blender_code`, then save the file (it finds the JSON via the `HDB_RENO_ROOT` path set at the top of the script).
