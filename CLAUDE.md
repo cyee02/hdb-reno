@@ -41,6 +41,10 @@ Room renovations each get a data file + script, e.g. `blender/data/service_yard.
 
 Renders go to `blender/renders/`. The `.blend` file is saved to `blender/hdb-reno.blend`.
 
+## Viewing tools
+
+`blender/tools/hdb_view_tools.py` (installed add-on): **Alt+W** in the 3D viewport toggles the walls + windows on/off (viewport only, renders unaffected). Also a button in the N panel > **HDB Reno** tab.
+
 ## Blender MCP (live editing)
 
 The `blender` MCP server (open-source `blender-mcp`) lets Claude control a running Blender.
