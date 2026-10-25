@@ -4,6 +4,7 @@ Run after build_flat.py:
     Blender -b -P blender/scripts/build_flat.py -P blender/scripts/render_views.py
 Set env RENDER_TAG (default v001) to version the output filenames.
 """
+import json
 import math
 import os
 
@@ -65,7 +66,7 @@ def setup_engine(scene):
     scene.render.resolution_y = 1200
     scene.render.film_transparent = False
     if hasattr(scene, "eevee"):
-        for attr, val in (("taa_render_samples", 32), ("use_shadows", True), ("use_raytracing", False)):
+        for attr, val in (("taa_render_samples", 32), ("use_shadows", True), ("use_raytracing", True)):
             if hasattr(scene.eevee, attr):
                 setattr(scene.eevee, attr, val)
     try:
@@ -112,6 +113,11 @@ def main():
     look_at(views["yard_laundry"], Vector((8.95, -6.75, 0.5)))
     look_at(views["shelter_rack"], Vector((0.45, -6.9, 0.9)))
     look_at(views["shelter_door"], Vector((2.0, -5.5, 1.05)))
+    # Extra views registered by room scripts (e.g. build_main_bedroom.py, which depends on the design):
+    # scene["room_cameras"] = JSON {view: {"loc": [x,y,z] m, "target": [x,y,z] m, "lens": mm}}.
+    for key, c in json.loads(scene.get("room_cameras", "{}")).items():
+        views[key] = camera(coll, f"Cam_{key}", Vector(c["loc"]), lens=c.get("lens", 14))
+        look_at(views[key], Vector(c["target"]))
 
     os.makedirs(OUT, exist_ok=True)
     for key, cam in views.items():
@@ -121,6 +127,11 @@ def main():
         print(f"Rendered {scene.render.filepath}")
 
     scene.camera = views["persp_south"]
+    # Keep the camera / sun wireframes out of the way in the viewport (renders are unaffected).
+    # Show them again with the eye icon on "Cameras" in the Outliner.
+    lc = next((c for c in bpy.context.view_layer.layer_collection.children if c.name == coll.name), None)
+    if lc:
+        lc.hide_viewport = True
     if bpy.app.background and bpy.data.filepath:
         bpy.ops.wm.save_mainfile()
 

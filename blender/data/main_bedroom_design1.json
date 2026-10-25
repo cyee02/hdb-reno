@@ -1,0 +1,244 @@
+{
+  "meta": {
+    "units": "mm, plan coordinates (same as floor_plan.json: +x right, +y down the page)",
+    "built_by": "blender/scripts/build_main_bedroom.py",
+    "layout": "Per owner's sketch (2026-10-25): bed along the window, flush top-right, headboard on the east wall; long table along the bed's south side; L-shaped wardrobe in the south-east corner; TV on the west wall facing the bed.",
+    "orientation": "North = facade/window wall (top of plan). East = facade side wall (right). South = Bath/WC 1 wall with the WC door at x 11950-12650. West = Bedroom 2 wall; lobby + room door to the south-west.",
+    "note": "Product sizes are typical catalogue sizes; confirm before carpentry is fabricated.",
+    "design": "Design 1"
+  },
+  "interior": {
+    "x": [
+      11900,
+      15025
+    ],
+    "y": [
+      100,
+      4350
+    ],
+    "ceiling": 2600,
+    "window": {
+      "x": [
+        12000,
+        14750
+      ],
+      "sill": 900
+    },
+    "note": "Wall-face to wall-face, assuming 150 mm internal / 200 mm external walls: ~3125 W x 4250 L. Verify on site."
+  },
+  "finishes": {
+    "carcass": [
+      0.93,
+      0.92,
+      0.89
+    ],
+    "front": [
+      0.93,
+      0.92,
+      0.89
+    ],
+    "wood": [
+      0.62,
+      0.47,
+      0.32
+    ],
+    "fabric": [
+      0.55,
+      0.57,
+      0.55
+    ],
+    "linen": [
+      0.95,
+      0.95,
+      0.93
+    ]
+  },
+  "bed": {
+    "size": "Queen 1530 x 1910 (SG queen 152 x 190 cm)",
+    "rect": [
+      13035,
+      100,
+      15025,
+      1630
+    ],
+    "headboard": {
+      "side": "east",
+      "thickness": 80,
+      "height": 1100
+    },
+    "frame_height": 300,
+    "mattress": 250,
+    "note": "Long side under the window, headboard on the east wall. Get in from the foot (west end) - north is the window wall, south is the table."
+  },
+  "desk": {
+    "rect": [
+      13035,
+      1650,
+      15025,
+      2250
+    ],
+    "top": 750,
+    "thickness": 25,
+    "drawer": [
+      14525,
+      15025
+    ],
+    "lamp": [
+      14800,
+      1850
+    ],
+    "chair": {
+      "at": [
+        13400,
+        2600
+      ],
+      "size": 480
+    },
+    "note": "Long study / vanity table, 1990 W x 600 D, along the bed's south side. Knee space on the left (chair), drawer pedestal on the right next to the cosmetics bay. Doubles as the bedside table."
+  },
+  "wardrobe": {
+    "height": 2600,
+    "depth": 600,
+    "board": 18,
+    "top_cabinet": 2050,
+    "show_doors": false,
+    "long_hang_rod": 1850,
+    "short_hang_rod": 1750,
+    "drawers_top": 700,
+    "cosmetics": {
+      "drawers_top": 850,
+      "counter": 900,
+      "counter_depth": 450,
+      "mirror": [
+        950,
+        1800
+      ],
+      "shelf": 1850
+    },
+    "legs": [
+      {
+        "name": "East",
+        "axis": "y",
+        "back": 15025,
+        "span": [
+          2250,
+          3750
+        ],
+        "note": "Along the east wall, facing west into the dressing area.",
+        "sections": [
+          {
+            "kind": "cosmetics",
+            "width": 500,
+            "owner": "Shared",
+            "note": "Open bay next to the table: mirror, LED shelf, counter + drawers. Reachable from both his and her side."
+          },
+          {
+            "kind": "long_hang",
+            "width": 500,
+            "owner": "His"
+          },
+          {
+            "kind": "drawers_short_hang",
+            "width": 500,
+            "owner": "His"
+          }
+        ],
+        "front": "west"
+      },
+      {
+        "name": "South",
+        "axis": "x",
+        "back": 4350,
+        "span": [
+          13170,
+          15025
+        ],
+        "note": "Along the south wall from just past the WC door, facing north.",
+        "sections": [
+          {
+            "kind": "drawers_short_hang",
+            "width": 630,
+            "owner": "Hers"
+          },
+          {
+            "kind": "long_hang",
+            "width": 1225,
+            "owner": "Hers",
+            "blind": 600,
+            "note": "Last 600 runs behind the east leg (blind corner); the rod continues into it for out-of-season clothes."
+          }
+        ],
+        "front": "north"
+      }
+    ],
+    "note": "L-shaped, full height, 600 D. Doors not drawn (owner wants it shown open). Dressing area between the table and the south leg: ~1500 x 1250."
+  },
+  "tv": {
+    "size": "55-inch, wall-mounted",
+    "wall": "west",
+    "wall_x": 11900,
+    "center_y": 865,
+    "width": 1230,
+    "height": 710,
+    "center_z": 1100,
+    "console": {
+      "rect": [
+        11900,
+        165,
+        12250,
+        1565
+      ],
+      "z": [
+        250,
+        550
+      ],
+      "note": "Floating TV console, 1400 L x 350 D"
+    },
+    "note": "Centred on the bed. ~2.8 m from the pillows, ~1.1 m from the foot of the bed.",
+    "faces": "east"
+  },
+  "cameras": {
+    "mbr_overview": {
+      "loc": [
+        12.0,
+        -4.25,
+        2.4
+      ],
+      "target": [
+        14.4,
+        -1.6,
+        0.8
+      ],
+      "lens": 14,
+      "note": "from the lobby corner"
+    },
+    "mbr_wardrobe": {
+      "loc": [
+        12.3,
+        -1.9,
+        1.8
+      ],
+      "target": [
+        14.6,
+        -3.4,
+        1.1
+      ],
+      "lens": 14,
+      "note": "the L-wardrobe"
+    },
+    "mbr_tv": {
+      "loc": [
+        14.7,
+        -0.865,
+        1.2
+      ],
+      "target": [
+        11.9,
+        -0.865,
+        1.1
+      ],
+      "lens": 20,
+      "note": "TV seen from the pillows"
+    }
+  }
+}

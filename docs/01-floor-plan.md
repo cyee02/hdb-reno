@@ -29,8 +29,8 @@ Values with **~** were scaled from the photo rather than read from a printed dim
 | Bedroom 2 | 8825–11825 | 0–3350 | 3.00 × 3.35 m | Door from corridor |
 | Main Bedroom | 11825–15125 (+ lobby 10725–11825) | 0–4450 (lobby 3350–4450) | 3.30 × 4.45 m + lobby | Door sits **across the corridor** at x ≈ 10725, hinged on the Bedroom 2 side; opens into a small lobby that leads to the bedroom and en-suite Bath 1. Only window is on the façade; no window on the south wall beside Bath 1 |
 | Corridor | ~8530–10725 | 3350–4450 | 1.1 m wide | Serves Bed 2, Bed 3, Main, Bath 2 |
-| Bath/WC 2 (common) | ~9170–11160 | 4450–~6380 | ~1.95 × 1.95 m | Bi-fold door from corridor; small high window to air-con ledge side |
-| Bath/WC 1 (main) | ~11160–13570 | 4450–~6380 | ~2.25 × 1.95 m | Bi-fold door from main bedroom; window over air-con ledge |
+| Bath/WC 2 (common) | ~9170–11160 | 4450–~6380 | ~1.95 × 1.95 m | Bi-fold door from corridor at x ≈ 9240–9940 (right at the WC's west wall, per HDB plan); small high window to air-con ledge side |
+| Bath/WC 1 (main) | ~11160–13570 | 4450–~6380 | ~2.25 × 1.95 m | Bi-fold door from main bedroom at x ≈ 11950–12650 (towards the WC's west side, per HDB plan — ~920 mm to the left as you enter); window over air-con ledge |
 | Air-con ledge | ~10770–13860 | ~6380–~7250 | — | Outdoor condenser units |
 | Kitchen | ~4100–~8530 | ~6000–~8900 | ~4.5 × 2.9 m | Top edge dashed = can be open to dining. **No windows** |
 | Service Yard | ~8530–~9980 | ~6380–~8900 | ~1.45 × 2.5 m | Laundry; bi-parting glass **sliding** door from the kitchen (leaves slide on the kitchen side) with a half-height window on each side (sill ~1100, top level with the door head); open (no grille) opening on east side to a drying ledge (to x ≈ 10650) with a 1 m parapet |
