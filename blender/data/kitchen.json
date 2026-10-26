@@ -48,17 +48,18 @@
   },
   "partition": {
     "x": [4300, 8455],
-    "y": 6000,
-    "tracks": 3,
-    "track_gap": 35,
-    "panels_per_side": 3,
+    "y": 5958.5,
+    "panels": 6,
+    "tracks": 6,
+    "track_gap": 33,
+    "stack": "east",
     "overlap": 30,
     "open": 0.0,
     "frame": 22,
-    "note": "Full-height slim black-frame glass sliding panels, top-hung, bi-parting. Open: the 3 west panels stack against the west wall; the 3 east panels slide into the 125 mm slot between C1 and the fridge (hidden). Set open 0-1 to show it opening."
+    "note": "Full-height slim black-frame glass sliding panels, top-hung, 6 panels on 6 tracks (telescopic). Opened, ALL panels slide east and stack flush against the side of the fridge in the slot between the fridge and C1, leaving the full width open. Tracks span y ~5862-6055 (fridge side at 6065, C1 ends at 5850). `open` (0-1) is the starting position after a rebuild; in Blender, move it with the HDB Reno tab (slider / Open / Close) or scene['door_kitchen_partition']."
   },
   "c1": {
-    "rect": [7855, 4450, 8455, 5940],
+    "rect": [7855, 4450, 8455, 5850],
     "column_width": 500,
     "wine_cellar": [4450, 5050],
     "coffee_machine": [5120, 5420],
@@ -73,7 +74,7 @@
       {"name": "Tea / matcha", "z": [1800, 2150], "glass": false},
       {"name": "Wine glasses", "z": [2150, 2600], "glass": true}
     ],
-    "note": "Runs the full east wall of the dining hall, from the glass partition to just before the corridor (RC wall ends at y 4450): 1490 W x 600 D. Coffee / tea / matcha station on the dining side of the glass. Per the owner's elevation sketch: wine cellar at the bottom, drawer above it, coffee machine on the counter; top cabinet = whisky (bottom row), doors (middle), wine glasses (top), 3 columns. Wine cellar (600 W) at the corridor end, cabinet doors under the coffee / tea end. Under-counter wine cooler must be a low (~700 H) model, or drop the counter / drawer."
+    "note": "Runs the full east wall of the dining hall, from the glass partition to just before the corridor (RC wall ends at y 4450): 1400 W x 600 D (stops at y 5850 to leave the 6-track slot for the glass panels). Coffee / tea / matcha station on the dining side of the glass. Per the owner's elevation sketch: wine cellar at the bottom, drawer above it, coffee machine on the counter; top cabinet = whisky (bottom row), doors (middle), wine glasses (top), 3 columns. Wine cellar (600 W) at the corridor end, cabinet doors under the coffee / tea end. Under-counter wine cooler must be a low (~700 H) model, or drop the counter / drawer."
   },
   "island": {
     "rect": [5000, 6110, 7000, 6810],

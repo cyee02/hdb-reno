@@ -7,12 +7,15 @@ or paste into Blender (or send via the Blender MCP `execute_blender_code` tool).
 Idempotent: deletes and rebuilds the "Flat" collection only. Other collections
 (e.g. Furniture) are left untouched.
 """
+import importlib
 import json
 import math
 import os
+import sys
 
 import bpy
 import bmesh
+from mathutils import Matrix, Vector
 
 # Fallback for when the script is run without __file__ (Blender text editor / MCP).
 HDB_RENO_ROOT = os.path.expanduser("~/workspace/hdb-reno")
@@ -27,6 +30,9 @@ except NameError:
 DATA = os.path.join(ROOT, "blender", "data", "floor_plan.json")
 BLEND = os.path.join(ROOT, "blender", "hdb-reno.blend")
 COLLECTION = "Flat"
+sys.path.insert(0, os.path.join(ROOT, "blender", "scripts"))
+import door_motion  # noqa: E402
+importlib.reload(door_motion)  # pick up edits when re-run inside a live Blender
 
 
 def mm(v):
@@ -201,6 +207,8 @@ def glass_panel(frame_bm, glass_bm, p0, p1, t, z0, z1, fw=60):
 
 
 def build_door(wall, op, i, horizontal, fixed, d, open_c, mats):
+    """Every door is built CLOSED and moved by drivers on scene["door_<id>"] (0 closed - 1 open,
+    see door_motion.py); the JSON `open` value is the starting position after a rebuild."""
     s, e = op["at"]
     w = e - s
     hinge = s if op.get("hinge", "start") == "start" else e
@@ -209,62 +217,103 @@ def build_door(wall, op, i, horizontal, fixed, d, open_c, mats):
     off = wall["thickness"] / 2
     z1 = op.get("head", d["door_height"])
     style = op.get("style", "swing")
+    single = sum(1 for o in wall.get("openings", []) if o["type"] == "door") == 1
+    gid = op.get("id") or (wall["id"] if single else f"{wall['id']}_{i}")
+    label = op.get("label", f"Door {gid}")
 
     def pt(along, across):
         """Point at `along` on the wall axis and `across` from the wall centre line."""
         return (along, fixed + across) if horizontal else (fixed + across, along)
 
+    def vec(along, across):
+        """Plan direction (along the wall, across it) as a Blender XY vector."""
+        x, y = (along, across) if horizontal else (across, along)
+        return Vector((x, -y))
+
+    def turn(a, b):
+        """Signed angle (radians, Blender Z) turning direction a onto direction b."""
+        return math.atan2(a.x * b.y - a.y * b.x, a.x * b.x + a.y * b.y)
+
+    def hinged(obj_name, bm, mat, pivot):
+        """Mesh object whose origin sits on the plan point `pivot`, so it turns about it."""
+        obj = mesh_object(obj_name, bm, mat, open_c)
+        p = Vector((*to_xy(*pivot), 0.0))
+        obj.data.transform(Matrix.Translation(-p))
+        obj.location = p
+        return obj
+
     name = f"Door_{wall['id']}_{i}"
+    # Turning from "along the wall into the opening" to "out of the wall on the swing side".
+    s1 = 1 if turn(vec(u, 0), vec(0, sw)) > 0 else -1
+
     if style == "bifold":
-        # Two leaves folded into a V, half open, stacking towards the hinge side.
-        half, ang, t = w / 2 - 10, math.radians(60), 30
-        h0 = (hinge, sw * off)
-        h1 = (h0[0] + u * half * math.cos(ang), h0[1] + sw * half * math.sin(ang))
-        h2 = (h1[0] + u * half * math.cos(ang), sw * off)
-        bm = bmesh.new()
-        add_prism(bm, pt(*h0), pt(*h1), t, 0, z1)
-        add_prism(bm, pt(*h1), pt(*h2), t, 0, z1)
-        # top track across the opening
+        # Two leaves: leaf 1 turns on the jamb hinge, leaf 2's far end rides the top track,
+        # so the pair folds into a V towards the hinge side (fully open = max_angle).
+        door_motion.register_group(gid, label, op.get("open", 0.7))
+        half, t = w / 2 - 10, 30
+        T = math.radians(op.get("max_angle", 85))
+        bm1, bm2 = bmesh.new(), bmesh.new()
+        add_prism(bm1, pt(hinge, sw * off), pt(hinge + u * half, sw * off), t, 0, z1)
+        add_prism(bm2, pt(hinge + u * half, sw * off), pt(hinge + u * 2 * half, sw * off), t, 0, z1)
+        leaf1 = hinged(f"{name}_leaf1", bm1, mats["door"], pt(hinge, sw * off))
+        door_motion.drive_rotation(leaf1, gid, s1 * T)
+        far = pt(hinge + u * 2 * half, sw * off)
+        leaf2 = hinged(f"{name}_leaf2", bm2, mats["door"], far)
+        door_motion.drive_rotation(leaf2, gid, -s1 * T)
+        # Far end slides back along the wall: along = hinge + 2 * half * cos(angle).
+        axis = 0 if horizontal else 1
+        k = mm(u * 2 * half) * (1 if horizontal else -1)
+        door_motion.drive_channel(leaf2, gid, "location", axis,
+                                  f"{leaf2.location[axis]:.5f} + {k:.5f} * (cos(o * {T:.5f}) - 1)")
+        bm = bmesh.new()                                    # top track across the opening
         add_prism(bm, pt(s, sw * off), pt(e, sw * off), 40, z1 - 40, z1)
-        mesh_object(name, bm, mats["door"], open_c)
+        mesh_object(f"{name}_track", bm, mats["door"], open_c)
         return
 
     if style == "sliding":
         # Leaves run on a track on one face of the wall (sw = which side).
-        # Two panels = bi-parting (opens in the middle). Drawn `open` fraction open.
+        # Two panels = bi-parting (opens in the middle). Each leaf is its own object.
         t, lap = 40, 25
         across = sw * (off + 10 + t / 2)
         n = op.get("panels", 2)
-        f = op.get("open", 0.75)
-        fbm, gbm = bmesh.new(), bmesh.new()
+        door_motion.register_group(gid, label, op.get("open", 0.75))
         if n == 2:
             mid = (s + e) / 2
-            leaves = [(s - lap - f * w / 2, mid - f * w / 2), (mid + f * w / 2, e + lap + f * w / 2)]
+            leaves = [(s - lap, mid, -w / 2), (mid, e + lap, w / 2)]   # (from, to, slide when open)
             track = (s - lap - w / 2, e + lap + w / 2)
         else:
-            leaves = [(s - lap - f * w, e + lap - f * w)]
+            leaves = [(s - lap, e + lap, -w)]
             track = (s - lap - w, e + lap)
-        for a0, a1 in leaves:
+        for k, (a0, a1, slide) in enumerate(leaves):
+            fbm, gbm = bmesh.new(), bmesh.new()
             glass_panel(fbm, gbm, pt(a0, across), pt(a1, across), t, 0, z1)
-        add_prism(fbm, pt(track[0], across), pt(track[1], across), 60, z1, z1 + 50)
-        mesh_object(name, fbm, mats["frame"], open_c)
-        mesh_object(f"{name}_glass", gbm, mats["glass"], open_c)
+            # Plan "along" is x on a horizontal wall, y (down the page = Blender -Y) on a vertical one.
+            delta = (mm(slide), 0, 0) if horizontal else (0, -mm(slide), 0)
+            for obj in (mesh_object(f"{name}_leaf{k + 1}", fbm, mats["frame"], open_c),
+                        mesh_object(f"{name}_leaf{k + 1}_glass", gbm, mats["glass"], open_c)):
+                door_motion.drive(obj, gid, delta)
+        bm = bmesh.new()
+        add_prism(bm, pt(track[0], across), pt(track[1], across), 60, z1, z1 + 50)
+        mesh_object(f"{name}_track", bm, mats["frame"], open_c)
         return
 
-    # Single leaf drawn open at 90 degrees from its hinge.
+    # Single swing leaf, closed in the opening (flush with the swing-side face); turns on
+    # the hinge out to the swing side, up to max_angle (default 90) when fully open.
+    door_motion.register_group(gid, label, op.get("open", 1.0))
     leaf_t = 40
-    a = hinge + u * leaf_t / 2
-    p0, p1 = pt(a, sw * off), pt(a, sw * (off + w))
+    angle = s1 * math.radians(op.get("max_angle", 90))
+    p0, p1 = pt(hinge, sw * (off - leaf_t / 2)), pt(hinge + u * w, sw * (off - leaf_t / 2))
+    pivot = pt(hinge, sw * off)
     if style == "glass":
         fbm, gbm = bmesh.new(), bmesh.new()
         glass_panel(fbm, gbm, p0, p1, leaf_t, 0, z1)
-        mesh_object(name, fbm, mats["frame"], open_c)
-        mesh_object(f"{name}_glass", gbm, mats["glass"], open_c)
+        for obj in (hinged(name, fbm, mats["frame"], pivot), hinged(f"{name}_glass", gbm, mats["glass"], pivot)):
+            door_motion.drive_rotation(obj, gid, angle)
         return
     bm = bmesh.new()
     add_prism(bm, p0, p1, leaf_t, 0, z1)
     mat = mats["door_main"] if op.get("main") else mats["door_shelter"] if op.get("shelter") else mats["door"]
-    mesh_object(name, bm, mat, open_c)
+    door_motion.drive_rotation(hinged(name, bm, mat, pivot), gid, angle)
 
 
 def build_walls(plan, coll, mats):

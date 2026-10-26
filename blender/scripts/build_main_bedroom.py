@@ -17,12 +17,15 @@ Run after build_flat.py:
     MB_DESIGN=2 Blender -b <file>.blend -P blender/scripts/build_main_bedroom.py
 or send via the Blender MCP `execute_blender_code` tool (set os.environ["MB_DESIGN"] first).
 """
+import importlib
 import json
 import math
 import os
+import sys
 
 import bpy
 import bmesh
+from mathutils import Matrix, Vector
 
 HDB_RENO_ROOT = os.path.expanduser("~/workspace/hdb-reno")
 try:
@@ -34,6 +37,9 @@ except NameError:
 
 DESIGN = os.environ.get("MB_DESIGN", "2")
 DATA = os.path.join(ROOT, "blender", "data", f"main_bedroom_design{DESIGN}.json")
+sys.path.insert(0, os.path.join(ROOT, "blender", "scripts"))
+import door_motion  # noqa: E402
+importlib.reload(door_motion)  # pick up edits when re-run inside a live Blender
 
 SLOTS = ["carcass", "front", "wood", "fabric", "linen", "mirror", "led", "black",
          "chrome", "duvet", "clothes_a", "clothes_b", "bottle_a", "bottle_b", "wall", "towel", "box", "basket", "monitor", "screen"]
@@ -462,25 +468,60 @@ def wire_baskets(d, back, m, a):
               S["clothes_a"] if d["levels"].index(z) % 2 else S["linen"])
 
 
-def bifold_doors(d, m):
-    """Bi-fold wardrobe doors across a north-south opening at x, opening east into the room.
+def bifold_doors(d, coll, mats):
+    """Free-sliding bi-fold wardrobe doors on a north-south track at x, folding east into the room.
 
-    `open` lists each pair's state: 0 = closed flat, 1 = fully folded against its hinge jamb.
+    Each pair = 2 leaves hinged together; both outer ends ride the top track, so a pair can fold
+    AND slide to either end of the opening, stacking flush there. One control per pair,
+    scene["door_wardrobe_<k>"]: -1 = folded at the north (window) end, 0 = closed,
+    +1 = folded at the south (toilet) end. Pairs can't pass each other on the track, so to
+    park the middle pair at an end, send the pair between it and that end there first.
     """
     x, (y0, y1), H = d["x"], d["span"], d["height"]
-    n = len(d["open"])
-    pair = (y1 - y0) / n
-    leaf, t = pair / 2 - 3, 20
-    m.box(x - 25, y0, x + 25, y1, H - 40, H, S["chrome"])                           # top track
-    for k, f in enumerate(d["open"]):
-        ys = y0 + k * pair + 2
-        ang = math.radians(5 + 80 * f) if f > 0 else 0.0
-        apex = (x + leaf * math.sin(ang), ys + leaf * math.cos(ang))
-        end = (x, ys + 2 * leaf * math.cos(ang))
-        m.prism((x, ys), apex, t, 10, H - 45, S["front"])
-        m.prism(apex, end, t, 10, H - 45, S["front"])
-        hx, hy = end[0] + (apex[0] - end[0]) * 0.1, end[1] + (apex[1] - end[1]) * 0.1  # handle near the free edge
-        m.box(hx + 10, hy - 8, hx + 30, hy + 8, 900, 1300, S["chrome"])
+    starts = d["position"]
+    n = len(starts)
+    P = (y1 - y0) / n
+    L, t = P / 2 - 3, 20                                   # leaf width, thickness
+    T = math.radians(d.get("max_angle", 85))
+    g = d.get("stack_pitch", 85)                           # folded pair footprint along the track
+    track = Mesh()
+    track.box(x - 25, y0, x + 25, y1, H - 40, H, S["chrome"])
+    track.finish("MB_WardrobeBifold track", coll, mats)
+    door_motion.forget_groups("wardrobe_")
+
+    def leaf(name, a0, a1, pivot, handle_at=None):
+        m = Mesh()
+        m.prism((x, a0), (x, a1), t, 10, H - 45, S["front"])
+        if handle_at is not None:                          # pull near the fold, room side
+            m.box(x + 10, handle_at - 8, x + 30, handle_at + 8, 900, 1300, S["chrome"])
+        obj = m.finish(name, coll, mats)
+        pv = Vector((x / 1000, -pivot / 1000, 0))
+        obj.data.transform(Matrix.Translation(-pv))
+        obj.location = pv
+        return obj
+
+    for k, start in enumerate(starts):
+        gid = f"wardrobe_{k + 1}"
+        where = "window end" if k == 0 else "toilet end" if k == n - 1 else "middle"
+        open_to = d.get("open_to", [-1] + [1] * (n - 1))[k]
+        door_motion.register_group(gid, f"Wardrobe bi-fold {k + 1} ({where})", start,
+                                   two_way=True, open_to=open_to)
+        ys = y0 + k * P + 3                                # pair's north end when closed
+        pN = y0 + 2 + k * g                                # north end when parked north
+        pS = y1 - 2 - (n - 1 - k) * g                      # south end when parked south
+        a = leaf(f"MB_Wardrobe bi-fold {k + 1}a", ys, ys + L, ys)
+        b = leaf(f"MB_Wardrobe bi-fold {k + 1}b", ys + L, ys + 2 * L, ys + 2 * L, handle_at=ys + L + 45)
+        # fn / fs = how far it's sent north / south (0-1); the fold angle grows with it.
+        fn, fs = "max(-o, 0)", "max(o, 0)"
+        north = (f"{ys:.1f} + {fn} * {pN - ys:.1f} + {fs} * {pS - ys - 2 * L:.1f}"
+                 f" + {2 * L:.1f} * (1 - cos({fs} * {T:.5f}))")
+        south = (f"{ys + 2 * L:.1f} + {fn} * {pN - ys:.1f} - {2 * L:.1f} * (1 - cos({fn} * {T:.5f}))"
+                 f" + {fs} * {pS - ys - 2 * L:.1f}")
+        door_motion.drive_channel(a, gid, "location", 1, f"-({north}) / 1000")
+        door_motion.drive_channel(b, gid, "location", 1, f"-({south}) / 1000")
+        # Leaf a points south from its pivot and turns east (CCW); leaf b points north and turns east (CW).
+        door_motion.drive_channel(a, gid, "rotation_euler", 2, f"abs(o) * {T:.5f}")
+        door_motion.drive_channel(b, gid, "rotation_euler", 2, f"-abs(o) * {T:.5f}")
 
 
 def hook_rail(d, m, a):
@@ -647,9 +688,9 @@ def main():
         pm.finish("MB_HangingSystem", carp, mats)
         pa.finish("MB_HangingClothes", acc, mats)
     if "bifold" in data:
-        bm_ = Mesh()
-        bifold_doors(data["bifold"], bm_)
-        bm_.finish("MB_WardrobeBifold", carp, mats)
+        bifold_doors(data["bifold"], carp, mats)
+    else:
+        door_motion.forget_groups("wardrobe_")
     if "hook_rail" in data:
         hm, ha = Mesh(), Mesh()
         hook_rail(data["hook_rail"], hm, ha)

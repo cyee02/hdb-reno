@@ -46,6 +46,8 @@ Renders go to `blender/renders/`. Render cameras + the sun live in the `Cameras`
 
 `blender/tools/hdb_view_tools.py` (installed add-on): **Alt+W** in the 3D viewport toggles the walls + windows on/off; **Shift+Alt+P** jumps to the plan view (top-down orthographic, north up, framed on the whole flat). Viewport only, renders unaffected. Also buttons in the N panel > **HDB Reno** tab.
 
+**Movable doors:** every door is built closed and moved by drivers on `scene["door_<id>"]` — swing doors turn on their hinge, WC bi-folds fold (leaf 1 on the hinge, leaf 2's end rides the track), the yard door and kitchen glass partition slide, and the main-bedroom wardrobe bi-folds (design 2) are two-way: `door_wardrobe_<k>` runs −1 (folded at the window end) … 0 (closed) … +1 (folded at the toilet end). Door ids/labels are the `id` / `label` fields on the openings in `floor_plan.json` (0 = closed, 1 = open; helper `blender/scripts/door_motion.py`, list in `scene["hdb_doors"]`). The HDB Reno tab has a slider + Open / Close per door, **Shift+Alt+O** opens/closes all, and **Make Animation** keyframes closed → open → hold → closed (frames 1–144; Space to play). Doors render wherever they're left. The JSON `open` values are the starting position after a rebuild. After editing the add-on, copy it to `~/Library/Application Support/Blender/5.2/scripts/addons/` and re-enable it.
+
 ## Blender MCP (live editing)
 
 The `blender` MCP server (open-source `blender-mcp`) lets Claude control a running Blender.

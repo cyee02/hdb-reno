@@ -7,15 +7,18 @@ Creates these collections (rebuilt each run, nothing else touched):
   Furniture.Kitchen   - movable island
   Furniture.Dining    - 6-seater dining table + chairs
   Accessories.Kitchen - whisky bottles, wine glasses, tea + matcha set
-It also registers the kitchen camera views in scene["room_cameras"] for render_views.py.
+It also registers the kitchen camera views in scene["room_cameras"] for render_views.py,
+and makes the glass partition movable: scene["door_kitchen_partition"] (0 closed - 1 open).
 
 Run after build_flat.py:
     Blender -b <file>.blend -P blender/scripts/build_kitchen.py
 or send via the Blender MCP `execute_blender_code` tool.
 """
+import importlib
 import json
 import math
 import os
+import sys
 
 import bpy
 import bmesh
@@ -29,6 +32,9 @@ except NameError:
     ROOT = HDB_RENO_ROOT
 
 DATA = os.path.join(ROOT, "blender", "data", "kitchen.json")
+sys.path.insert(0, os.path.join(ROOT, "blender", "scripts"))
+import door_motion  # noqa: E402
+importlib.reload(door_motion)  # pick up edits when re-run inside a live Blender
 
 SLOTS = ["carcass", "front", "counter", "wood", "frame", "glass", "glass_dark", "steel",
          "chrome", "appliance", "led", "bottle_wine", "bottle_whisky", "ceramic", "matcha", "black"]
@@ -232,31 +238,44 @@ def top_run(run, tc, ceiling, mk):
     return m, f"{run['name']} top cabinets (to ceiling)"
 
 
-def partition(p, ceiling, mk_frame, mk_glass):
-    """Bi-parting, top-hung, full-height slim black-frame glass panels on 3 tracks."""
-    fm, gm = mk_frame(), mk_glass()
+def partition(p, ceiling, mk):
+    """Top-hung, full-height slim black-frame glass panels, one track each.
+
+    stack "east": every panel slides east and parks in the slot between the fridge and C1.
+    stack "both": bi-parting, half the panels park at each end (needs tracks >= panels / 2).
+
+    Returns the ceiling track plus one (mesh, slide_mm) per panel. Panels are built CLOSED;
+    `slide_mm` is how far the panel travels along plan x when fully open.
+    """
     x0, x1 = p["x"]
-    n, lap, fw = p["panels_per_side"], p["overlap"], p["frame"]
-    w = ((x1 - x0) + (2 * n - 1) * lap) / (2 * n)
-    gap, yc, f = p["track_gap"], p["y"], p["open"]
+    n, lap, fw = p["panels"], p["overlap"], p["frame"]
+    w = ((x1 - x0) + (n - 1) * lap) / n
+    east = p.get("stack", "east") == "east"
+    gap, yc = p["track_gap"], p["y"]
     track_y = [yc + (t - (p["tracks"] - 1) / 2) * gap for t in range(p["tracks"])]
-    # West panels sit on tracks 0,1,2 (wall -> middle); east panels on 1,0,2 (middle -> wall)
-    # so neighbouring panels never share a track and each stack uses all three.
-    tracks = [0, 1, 2, 1, 0, 2][: 2 * n] if n == 3 else [k % p["tracks"] for k in range(2 * n)]
+    if east:
+        tracks = list(range(n))                # one track per panel: all stack in the slot
+    else:
+        # West half on tracks 0,1,2..; east half reversed, so neighbours never share a track.
+        h = n // 2
+        tracks = list(range(h)) + [(h - 1 - k) % p["tracks"] for k in range(n - h)]
     z0, z1 = 10, ceiling - 45
-    for k in range(2 * n):
-        closed = x0 + k * (w - lap)
-        parked = x0 if k < n else x1 - w
-        a = closed + f * (parked - closed)
+    panels = []
+    for k in range(n):
+        a = x0 + k * (w - lap)                                     # closed position
+        parked = x1 - w if east or k >= n // 2 else x0             # fully open position
         y = track_y[tracks[k]]
         ya, yb = y - 14, y + 14
-        fm.box(a, ya, a + fw, yb, z0, z1, 0)                      # stiles
-        fm.box(a + w - fw, ya, a + w, yb, z0, z1, 0)
-        fm.box(a, ya, a + w, yb, z0, z0 + fw + 20, 0)             # rails
-        fm.box(a, ya, a + w, yb, z1 - fw, z1, 0)
-        gm.box(a + fw, y - 4, a + w - fw, y + 4, z0 + fw + 20, z1 - fw, 0)
-    fm.box(x0, track_y[0] - 25, x1, track_y[-1] + 25, ceiling - 45, ceiling, 0)  # ceiling track
-    return fm, gm
+        m = mk()
+        m.box(a, ya, a + fw, yb, z0, z1, 0)                        # stiles
+        m.box(a + w - fw, ya, a + w, yb, z0, z1, 0)
+        m.box(a, ya, a + w, yb, z0, z0 + fw + 20, 0)               # rails
+        m.box(a, ya, a + w, yb, z1 - fw, z1, 0)
+        m.box(a + fw, y - 4, a + w - fw, y + 4, z0 + fw + 20, z1 - fw, 1)  # glass
+        panels.append((m, parked - a))
+    track = mk()
+    track.box(x0, track_y[0] - 25, x1, track_y[-1] + 25, ceiling - 45, ceiling, 0)
+    return track, panels
 
 
 def c1_columns(c, a0, a1):
@@ -537,9 +556,12 @@ def main():
         print(f"  built {name}")
 
     c1_glass(c, Mesh).finish("KT_C1 glass doors", carp, [mats[S["glass"]]])
-    fm, gm = partition(d["partition"], ceiling, Mesh, Mesh)
-    fm.finish("KT_Glass partition frames", carp, [mats[S["frame"]]])
-    gm.finish("KT_Glass partition glass", carp, [mats[S["glass"]]])
+    track, panels = partition(d["partition"], ceiling, Mesh)
+    track.finish("KT_Glass partition track", carp, [mats[S["frame"]]])
+    door_motion.register_group("kitchen_partition", "Kitchen glass partition", d["partition"]["open"])
+    for k, (mesh, slide) in enumerate(panels):
+        obj = mesh.finish(f"KT_Glass panel {k + 1}", carp, [mats[S["frame"]], mats[S["glass"]]])
+        door_motion.drive(obj, "kitchen_partition", (slide / 1000, 0, 0))
 
     dn = d["dining"]
     for row in dn["chair_rows"]:
