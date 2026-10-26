@@ -53,17 +53,17 @@
     {"id": "bed2_main", "from": [11825, 0], "to": [11825, 3350], "thickness": 150},
     {"id": "main_lobby", "from": [10725, 3350], "to": [10725, 4450], "thickness": 100,
      "note": "Main bedroom door sits across the corridor (per HDB plan), opening into the main bedroom's lobby.",
-     "openings": [{"type": "door", "at": [3430, 4370], "hinge": "start", "swing": 1}]},
+     "openings": [{"type": "door", "id": "main_bedroom", "label": "Main bedroom door", "at": [3430, 4370], "hinge": "start", "swing": 1}]},
     {"id": "bed3_south", "from": [5825, 3350], "to": [8825, 3350], "thickness": 150,
-     "openings": [{"type": "door", "at": [7850, 8750], "hinge": "end", "swing": -1}]},
+     "openings": [{"type": "door", "id": "bedroom3", "label": "Bedroom 3 door", "at": [7850, 8750], "hinge": "end", "swing": -1}]},
     {"id": "bed2_south", "from": [8825, 3350], "to": [11825, 3350], "thickness": 150,
-     "openings": [{"type": "door", "at": [8900, 9800], "hinge": "start", "swing": -1}]},
+     "openings": [{"type": "door", "id": "bedroom2", "label": "Bedroom 2 door", "at": [8900, 9800], "hinge": "start", "swing": -1}]},
 
     {"id": "bath_north", "from": [8530, 4450], "to": [13570, 4450], "thickness": 150,
      "openings": [
-       {"type": "door", "style": "bifold", "at": [9240, 9940], "hinge": "start", "swing": 1,
+       {"type": "door", "style": "bifold", "id": "wc2", "label": "WC 2 bi-fold door", "at": [9240, 9940], "hinge": "start", "swing": 1,
         "note": "Per HDB plan the WC2 bi-fold starts right at the WC2 west wall (moved ~560 west on 2026-10-25)."},
-       {"type": "door", "style": "bifold", "at": [11950, 12650], "hinge": "end", "swing": 1,
+       {"type": "door", "style": "bifold", "id": "wc1", "label": "WC 1 bi-fold door", "at": [11950, 12650], "hinge": "end", "swing": 1,
         "note": "Per HDB plan the WC1 bi-fold sits ~800 from the WC1 west wall (moved 500 west on 2026-10-25), leaving ~920 inside to the left (east) as you enter."}
      ]},
     {"id": "bath_party", "from": [11160, 4450], "to": [11160, 6380], "thickness": 150},
@@ -81,7 +81,7 @@
     {"id": "kitchen_yard", "from": [8530, 6380], "to": [8530, 8900], "thickness": 150,
      "openings": [
        {"type": "window", "at": [6500, 7300], "sill": 1100, "head": 2100, "cols": 1, "transom": 0},
-       {"type": "door", "style": "sliding", "at": [7350, 8150], "swing": -1, "panels": 2, "open": 0.75,
+       {"type": "door", "style": "sliding", "id": "kitchen_yard", "label": "Service yard door", "at": [7350, 8150], "swing": -1, "panels": 2, "open": 0.75,
         "note": "Bi-parting glass sliding door; both leaves slide on the kitchen side (swing -1). Top-hung, no floor track, so the robot vacuum can cross."},
        {"type": "window", "at": [8200, 8780], "sill": 1100, "head": 2100, "cols": 1, "transom": 0}
      ]},
@@ -92,9 +92,9 @@
     {"id": "shelter_west", "from": [25, 4845], "to": [25, 7655], "thickness": 250, "side": "out"},
     {"id": "shelter_south", "from": [25, 7655], "to": [1625, 7655], "thickness": 250, "side": "out"},
     {"id": "shelter_east", "from": [1625, 4845], "to": [1625, 7655], "thickness": 250,
-     "openings": [{"type": "door", "at": [5500, 6300], "hinge": "start", "swing": 1, "shelter": true}]},
+     "openings": [{"type": "door", "id": "shelter", "label": "Household shelter door", "at": [5500, 6300], "hinge": "start", "swing": 1, "shelter": true}]},
     {"id": "entrance", "from": [1750, 7680], "to": [4200, 7680], "thickness": 200, "side": "out",
-     "openings": [{"type": "door", "at": [2425, 3425], "hinge": "start", "swing": -1, "main": true}]}
+     "openings": [{"type": "door", "id": "main_door", "label": "Main entrance door", "at": [2425, 3425], "hinge": "start", "swing": -1, "main": true}]}
   ],
   "ledges": [
     {"id": "aircon_parapet_s", "from": [10770, 7250], "to": [13800, 7250], "thickness": 100, "height": 1000},

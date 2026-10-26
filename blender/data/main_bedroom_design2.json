@@ -149,12 +149,19 @@
       2800
     ],
     "height": 2600,
-    "open": [
-      0.0,
-      1.0,
-      0.5
+    "position": [
+      -1,
+      0,
+      1
     ],
-    "note": "White bi-fold doors (3 pairs, ~340 leaves) across the hanging area, like the reference video. Drawn: window pair closed, middle pair fully folded, toilet-end pair half open. Each pair folds out ~340 into the ~945 aisle."
+    "open_to": [
+      -1,
+      1,
+      1
+    ],
+    "max_angle": 85,
+    "stack_pitch": 85,
+    "note": "White free-sliding bi-fold doors: 3 pairs (~337 leaves) on one top track across the hanging area. Each pair folds AND slides to either end and stacks flush there (each folded pair takes ~85 mm of track, sticks out ~340 into the ~945 aisle). Control per pair in Blender: -1 = folded at the window (north) end, 0 = closed, +1 = folded at the toilet (south) end; `position` is the starting state after a rebuild (drawn: pair 1 at the window end, pair 2 closed, pair 3 at the toilet end); `open_to` is where 'Open all' sends each pair."
   },
   "wardrobe": {
     "height": 2600,

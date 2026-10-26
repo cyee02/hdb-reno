@@ -4,6 +4,8 @@ Newest first. One entry per decision.
 
 | Date | Area | Decision | Why | Cost (SGD) |
 |---|---|---|---|---|
+| 2026-10-26 | Main bedroom | Wardrobe bi-folds (design 2) are free-sliding: 3 pairs on one top track, each can fold and slide to either end and stack flush | Open up the whole hanging area from either side | — |
+| 2026-10-26 | Kitchen | Glass partition changed from bi-parting to one-way: 6 panels on 6 tracks all stack flush against the side of the fridge when open; C1 shortened to ~1400 W (ends at y 5850) for the ~200 mm slot | Owner wants the doors all flushed to the fridge side; full width open | — |
 | 2026-10-26 | Dining | Table shifted 175 mm towards the glass (700 mm to the glass, 1025 mm to the bedroom 3 wall), as in the HDB brochure | Leaves a walkway behind the north chairs to the corridor | — |
 | 2026-10-26 | Kitchen | Revised: straight top & bottom cabinet run on the south wall only (west-wall cabinets removed); island enlarged to 2000 × 700 and pushed up to the glass partition; no carpentry above the fridge; C1 extended along the whole east wall up to the corridor (~1490 W, 3 columns) | Owner feedback on first render | — |
 | 2026-10-26 | Dining | Table narrowed to 1800 × 800 (still 3 per side) and lined up with the island | ~50 mm more chair space per side; shorter would make 3 a side cramped | — |

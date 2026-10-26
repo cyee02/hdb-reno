@@ -71,7 +71,7 @@ Orientation (plan view): **north / top** = window wall, **east / right** = faça
   - Middle: **stack of 4 pull-out wire baskets** (to ~870) under short hang — folded clothes / accessories.
   - Toilet end: long hang.
   - Wire shelf at 2050 for boxes / folded items.
-  - Closed with **white bi-fold doors** (3 pairs, ~340 leaves, floor to ceiling) like the reference video; each pair folds out ~340 into the ~945 aisle.
+  - Closed with **white free-sliding bi-fold doors** (3 pairs, ~340 leaves, floor to ceiling, one top track) like the reference video. Each pair can fold **and slide to either end** of the wardrobe and stacks flush there (~85 mm of track per folded pair), sticking out ~340 into the ~945 aisle. Pairs can't pass each other, so to park the middle pair at an end, the end pair goes first. Movable in Blender: HDB Reno tab > Doors (slider −1 window end … 0 closed … +1 toilet end).
 - **Cupboard 2** (toilet end): **full height**, 650 × 550, **facing the lobby / WC**. Towels on shelves at the bottom (to 850), **open middle** (850–1600), boxes / seldom-used items on top (above 1600).
 - **Full-length mirror** (600 × 1800) on the **lobby's south wall — on your right as you walk in** (clear of the door swing).
 
