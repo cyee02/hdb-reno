@@ -22,7 +22,7 @@ This repo tracks the renovation of our HDB 5-room flat. It has two halves:
 ## Base model and style copies
 
 - `blender/hdb-reno.blend` — the working model that the build scripts update.
-- `blender/base/hdb-reno-base.blend` — frozen snapshot of the agreed layout (shell + WC fixtures, no styling). **Don't edit it**; copy it to start a new style.
+- `blender/saved_versions/hdb-reno-base.blend` — frozen snapshot of the agreed layout (shell + WC fixtures, no styling). **Don't edit it**; copy it to start a new style.
 - `blender/styles/<style-name>.blend` — one file per renovation style (e.g. `scandi.blend`, `japandi.blend`). Put styling in its own collections (`Furniture`, `Carpentry`, `Materials`…), never inside `Flat` or `Fixtures`, so a rebuild keeps it.
 - Render a style with `RENDER_TAG=<style-name>` so its images in `blender/renders/` don't overwrite others.
 - If the layout changes later, update the JSON, rebuild each style file (command below with that file instead of `hdb-reno.blend`), and refresh the base snapshot.
@@ -36,9 +36,10 @@ Rebuild the model and render (headless):
 ```
 
 Open the `.blend` (as above) so other collections are kept; without it Blender starts from an empty scene and the save overwrites the file with only what the scripts build. Close the file in the Blender app first, or use the MCP route below, so the two don't overwrite each other.
+The kitchen fridge's French doors move on `scene["door_fridge"]` like the other doors.
 Bathroom fixtures (toilets, sinks) come from `fixtures` in the JSON and are built into the `Fixtures` collection by `build_fixtures.py`.
 Room renovations each get a data file + script, e.g. `blender/data/service_yard.json` → `build_service_yard.py`, building into `Carpentry.<Room>` and `Appliances.<Room>` (children of `Carpentry` / `Appliances`). Each script only rebuilds its own collections.
-The main bedroom has layout options: `blender/data/main_bedroom_design<N>.json`, chosen with env `MB_DESIGN=<N>` (default 4; design 2 is also saved as `blender/saved_versions/mainbedroom_design1.blend`; design 5 — Claude's recommendation, king bed — as `blender/saved_versions/mainbedroom_design5.blend`) when running `build_main_bedroom.py`. The main-bedroom wardrobe baskets slide out on `scene["door_basket_<k>"]`; `blender/scripts/animate_mbr_wardrobe.py` keyframes the wardrobe demo (env `RENDER_ANIM=1` also renders it to an mp4). Room scripts can register extra camera views in `scene["room_cameras"]`; `render_views.py` renders them.
+The main bedroom has layout options: `blender/data/main_bedroom_design<N>.json`, chosen with env `MB_DESIGN=<N>` (default 5 — Claude's recommendation, king bed, also saved as `blender/saved_versions/mainbedroom_design5.blend`; design 2 is saved as `blender/saved_versions/mainbedroom_design1.blend`) when running `build_main_bedroom.py`. The main-bedroom wardrobe baskets slide out on `scene["door_basket_<k>"]`; `blender/scripts/animate_mbr_wardrobe.py` keyframes the wardrobe demo (env `RENDER_ANIM=1` also renders it to an mp4). Room scripts can register extra camera views in `scene["room_cameras"]`; `render_views.py` renders them.
 
 Renders go to `blender/renders/`. Render cameras + the sun live in the `Cameras` collection, hidden in the viewport after each render (eye icon in the Outliner to show them). The `.blend` file is saved to `blender/hdb-reno.blend`.
 

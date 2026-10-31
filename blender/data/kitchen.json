@@ -4,14 +4,34 @@
     "built_by": "blender/scripts/build_kitchen.py",
     "source": "Owner's sketches IMG_1367 (plan) + C1 elevation; glass partition per the BANGYUAN slim-frame reference (2026-10-26).",
     "orientation": "Kitchen interior x 4300-8455 (west wall face to yard wall face), y 6000 (open edge to dining) - 8775 (south external wall face). Dining hall is north of y 6000.",
-    "note": "Hob, sink, oven and dishwasher positions are not in the sketch - placed as a suggestion. Appliance sizes are typical catalogue sizes; confirm against the chosen models."
+    "note": "Work flow (2026-11-01): fridge (SW corner) -> landing -> sink -> main prep -> hob -> landing, along the south run, per common NKBA-style guidelines. Appliance sizes are typical catalogue sizes; confirm against the chosen models."
   },
   "finishes": {
-    "carcass": [0.93, 0.93, 0.91],
-    "front": [0.95, 0.95, 0.94],
-    "counter": [0.82, 0.82, 0.80],
-    "wood": [0.62, 0.45, 0.30],
-    "frame": [0.03, 0.03, 0.03]
+    "carcass": [
+      0.93,
+      0.93,
+      0.91
+    ],
+    "front": [
+      0.95,
+      0.95,
+      0.94
+    ],
+    "counter": [
+      0.82,
+      0.82,
+      0.8
+    ],
+    "wood": [
+      0.62,
+      0.45,
+      0.3
+    ],
+    "frame": [
+      0.03,
+      0.03,
+      0.03
+    ]
   },
   "ceiling": 2600,
   "base_cabinets": {
@@ -20,9 +40,43 @@
     "kick": 100,
     "depth": 600,
     "runs": [
-      {"name": "South run", "rect": [4300, 8175, 8395, 8775], "front": "north",
-       "fronts": [[4300, 4900], [4900, 5300], [5300, 6200], [6200, 6950], [6950, 7750], [7750, 8350], [8350, 8395]],
-       "note": "Ends 60 mm short of the yard wall so the south leaf of the bi-parting yard door can slide past (track runs to y 8575)."}
+      {
+        "name": "South run",
+        "rect": [
+          5300,
+          8175,
+          8395,
+          8775
+        ],
+        "front": "north",
+        "fronts": [
+          [
+            5300,
+            5600
+          ],
+          [
+            5600,
+            6400
+          ],
+          [
+            6400,
+            7000
+          ],
+          [
+            7000,
+            7250
+          ],
+          [
+            7250,
+            8050
+          ],
+          [
+            8050,
+            8395
+          ]
+        ],
+        "note": "From the fridge east: 300 fridge landing (drawers) | 800 sink | 600 dishwasher + 250 drawers (850 main prep between sink and hob) | 800 hob cabinet (pot drawers, no oven) | 345 landing past the hob. Ends 60 mm short of the yard wall so the yard door's south leaf can slide past."
+      }
     ],
     "note": "Bottom cabinets 900 mm high (incl. 30 mm worktop) - usable counter top for placing items."
   },
@@ -30,24 +84,93 @@
     "bottom": 1550,
     "depth": 350,
     "runs": [
-      {"name": "South", "rect": [4300, 8425, 8395, 8775], "front": "north"}
+      {
+        "name": "South",
+        "rect": [
+          5300,
+          8425,
+          8395,
+          8775
+        ],
+        "front": "north",
+        "note": "Starts at the fridge's east side - nothing above the fridge."
+      }
     ],
     "door_width": 450,
     "note": "Up to the ceiling (2600). 650 mm clear above the counter; LED strip under."
   },
-  "hob": {"rect": [5360, 8230, 6140, 8720], "note": "Suggested: 780 mm induction/gas hob over a built-in oven."},
-  "hood": {"rect": [5300, 8425, 6200, 8775], "height": 50, "note": "Slim pull-out hood under the top cabinet; kitchen has no window so duct it out (via the yard)."},
-  "oven": {"x": [5300, 6200], "z": [180, 780]},
-  "sink": {"basin": [7110, 8260, 7590, 8680], "depth": 220, "note": "Suggested: undermount single bowl at the east end, near the yard."},
-  "dishwasher": {"x": [7750, 8350], "note": "Suggested 600 mm built-in."},
+  "hob": {
+    "rect": [
+      7260,
+      8230,
+      8040,
+      8720
+    ],
+    "note": "780 mm hob at the east end, near the yard: short hood duct out through the yard wall."
+  },
+  "hood": {
+    "rect": [
+      7250,
+      8425,
+      8050,
+      8775
+    ],
+    "height": 50,
+    "note": "Slim pull-out hood under the top cabinet, ducted out via the yard (~0.5 m run)."
+  },
+  "sink": {
+    "basin": [
+      5760,
+      8260,
+      6240,
+      8680
+    ],
+    "depth": 220,
+    "note": "Undermount single bowl, west of the prep area. Water + waste re-routed from the yard end along the south wall under the cabinets (~1.5 m, keep the fall)."
+  },
+  "dishwasher": {
+    "x": [
+      6400,
+      7000
+    ],
+    "note": "600 built-in, next to the sink, under the main prep counter."
+  },
   "fridge": {
-    "rect": [7755, 6065, 8455, 6895],
-    "height": 1800,
-    "front": "west",
-    "note": "Against the yard wall, facing west. 830 W x 700 D (multi-door). Ends at y 6895, just clear of the yard door's north leaf (slides to y 6925). No carpentry above the fridge."
+    "model": "Hitachi R-GWC670TS (XM, Mirror Mauve Gray): 880 W x 654 D (650 without the drawer switch) x 1843 H, French doors + 2 small drawers + 2 large drawers",
+    "rect": [
+      4400,
+      8070,
+      5280,
+      8724
+    ],
+    "height": 1843,
+    "front": "north",
+    "split": 965,
+    "strip": 30,
+    "drawers": [
+      [
+        20,
+        430
+      ],
+      [
+        435,
+        770
+      ],
+      [
+        775,
+        935
+      ]
+    ],
+    "door_thickness": 45,
+    "max_angle": 100,
+    "open": 1.0,
+    "note": "SW corner of the kitchen, facing north. 100 from the west wall so the hinge-side door can open past 90 (to pull out the shelves / crisper), ~50 from the back wall for ventilation, 20 to the counter. Nothing above it. Doors move on scene['door_fridge'] (0 closed - 1 open, 100 deg)."
   },
   "partition": {
-    "x": [4300, 8455],
+    "x": [
+      4300,
+      8455
+    ],
     "y": 5958.5,
     "panels": 6,
     "tracks": 6,
@@ -56,43 +179,269 @@
     "overlap": 30,
     "open": 0.0,
     "frame": 22,
-    "note": "Full-height slim black-frame glass sliding panels, top-hung, 6 panels on 6 tracks (telescopic). Opened, ALL panels slide east and stack flush against the side of the fridge in the slot between the fridge and C1, leaving the full width open. Tracks span y ~5862-6055 (fridge side at 6065, C1 ends at 5850). `open` (0-1) is the starting position after a rebuild; in Blender, move it with the HDB Reno tab (slider / Open / Close) or scene['door_kitchen_partition']."
+    "note": "Full-height slim black-frame glass sliding panels, top-hung, 6 panels on 6 tracks (telescopic). Opened, ALL panels slide east and stack flush against the side of the yard-wall cupboard (where the fridge was) in the slot between it and C1, leaving the full width open. Tracks span y ~5862-6055 (cupboard side at 6065, C1 ends at 5850). `open` (0-1) is the starting position after a rebuild; in Blender, move it with the HDB Reno tab (slider / Open / Close) or scene['door_kitchen_partition']."
   },
   "c1": {
-    "rect": [7855, 4450, 8455, 5850],
+    "rect": [
+      7855,
+      4450,
+      8455,
+      5850
+    ],
     "column_width": 500,
-    "wine_cellar": [4450, 5050],
-    "coffee_machine": [5120, 5420],
+    "wine_cellar": [
+      4450,
+      5050
+    ],
+    "coffee_machine": [
+      5120,
+      5420
+    ],
     "front": "west",
     "counter_top": 900,
     "wine_cellar_top": 720,
-    "drawer": [730, 870],
+    "drawer": [
+      730,
+      870
+    ],
     "upper_bottom": 1450,
     "upper_depth": 350,
     "upper_rows": [
-      {"name": "Whisky", "z": [1450, 1800], "glass": true},
-      {"name": "Tea / matcha", "z": [1800, 2150], "glass": false},
-      {"name": "Wine glasses", "z": [2150, 2600], "glass": true}
+      {
+        "name": "Whisky",
+        "z": [
+          1450,
+          1800
+        ],
+        "glass": true
+      },
+      {
+        "name": "Tea / matcha",
+        "z": [
+          1800,
+          2150
+        ],
+        "glass": false
+      },
+      {
+        "name": "Wine glasses",
+        "z": [
+          2150,
+          2600
+        ],
+        "glass": true
+      }
     ],
     "note": "Runs the full east wall of the dining hall, from the glass partition to just before the corridor (RC wall ends at y 4450): 1400 W x 600 D (stops at y 5850 to leave the 6-track slot for the glass panels). Coffee / tea / matcha station on the dining side of the glass. Per the owner's elevation sketch: wine cellar at the bottom, drawer above it, coffee machine on the counter; top cabinet = whisky (bottom row), doors (middle), wine glasses (top), 3 columns. Wine cellar (600 W) at the corridor end, cabinet doors under the coffee / tea end. Under-counter wine cooler must be a low (~700 H) model, or drop the counter / drawer."
   },
   "island": {
-    "rect": [5000, 6110, 7000, 6810],
+    "rect": [
+      5000,
+      6110,
+      7000,
+      6810
+    ],
     "top": 900,
     "castor": 80,
-    "note": "Movable island on lockable castors: 2000 x 700, 900 high (level with the counters). Pushed up to the glass partition (~50 mm gap to the panels); 1365 mm aisle to the counter, 700 to the west wall, 755 to the fridge front so its doors can open."
+    "note": "Movable island on lockable castors: 2000 x 700, 900 high (level with the counters). Pushed up to the glass partition; 1365 mm aisle to the south counter (~1260 to the fridge front, enough for the French doors), 855 to the yard-wall cupboard."
   },
   "dining": {
-    "table": {"rect": [5100, 4450, 6900, 5250], "height": 750},
-    "chair_x": [5400, 6000, 6600],
+    "table": {
+      "rect": [
+        5100,
+        4450,
+        6900,
+        5250
+      ],
+      "height": 750
+    },
+    "chair_x": [
+      5400,
+      6000,
+      6600
+    ],
     "chair_seat": 450,
-    "chair_rows": [{"y": 4035, "faces": "south"}, {"y": 5215, "faces": "north"}],
+    "chair_rows": [
+      {
+        "y": 4035,
+        "faces": "south"
+      },
+      {
+        "y": 5215,
+        "faces": "north"
+      }
+    ],
     "note": "6-seater: 1800 x 800 (600 per person, 3 a side). Narrowed from 900 to free ~50 mm more chair space per side (925 each side in the 2650 mm deep hall); moved west to line up with the island, leaving ~955 mm between the table end and C1 for the walk to the corridor. Shifted 175 mm towards the glass (like the HDB brochure): 700 mm table edge -> glass for the south chairs, 1025 mm table edge -> bedroom 3 wall so people can walk behind the north chairs to the corridor."
   },
   "cameras": {
-    "kit_overview": {"loc": [4.5, -3.75, 1.9], "target": [6.9, -7.6, 0.9], "lens": 16, "note": "from the dining corner, through the glass"},
-    "kit_inside": {"loc": [8.25, -7.6, 2.2], "target": [5.0, -7.2, 0.8], "lens": 14, "note": "L-cabinets + island from the yard door"},
-    "kit_c1": {"loc": [5.7, -5.45, 1.6], "target": [8.45, -5.0, 1.35], "lens": 14, "note": "C1 coffee / wine station"},
-    "kit_dining": {"loc": [3.55, -4.1, 1.75], "target": [6.6, -5.4, 0.8], "lens": 16, "note": "dining table + glass partition"}
+    "kit_overview": {
+      "loc": [
+        4.5,
+        -3.75,
+        1.9
+      ],
+      "target": [
+        6.9,
+        -7.6,
+        0.9
+      ],
+      "lens": 16,
+      "note": "from the dining corner, through the glass"
+    },
+    "kit_inside": {
+      "loc": [
+        8.25,
+        -7.6,
+        2.2
+      ],
+      "target": [
+        5.0,
+        -7.2,
+        0.8
+      ],
+      "lens": 14,
+      "note": "L-cabinets + island from the yard door"
+    },
+    "kit_c1": {
+      "loc": [
+        5.7,
+        -5.45,
+        1.6
+      ],
+      "target": [
+        8.45,
+        -5.0,
+        1.35
+      ],
+      "lens": 14,
+      "note": "C1 coffee / wine station"
+    },
+    "kit_dining": {
+      "loc": [
+        3.55,
+        -4.1,
+        1.75
+      ],
+      "target": [
+        6.6,
+        -5.4,
+        0.8
+      ],
+      "lens": 16,
+      "note": "dining table + glass partition"
+    },
+    "kit_fridge": {
+      "loc": [
+        4.84,
+        -6.75,
+        1.75
+      ],
+      "target": [
+        4.84,
+        -8.4,
+        1.15
+      ],
+      "lens": 15,
+      "note": "fridge with the French doors open, SW corner"
+    },
+    "kit_flow": {
+      "loc": [
+        6.8,
+        -6.95,
+        2.1
+      ],
+      "target": [
+        6.6,
+        -8.6,
+        0.8
+      ],
+      "lens": 11,
+      "note": "fridge -> sink -> prep -> hob along the south run"
+    },
+    "kit_oven": {
+      "loc": [
+        6.5,
+        -7.2,
+        1.6
+      ],
+      "target": [
+        8.4,
+        -6.45,
+        1.15
+      ],
+      "lens": 16,
+      "note": "full-height appliance tower, trays pulled out"
+    }
+  },
+  "appliance_tower": {
+    "rect": [
+      7855,
+      6065,
+      8455,
+      6895
+    ],
+    "front": "west",
+    "kick": 100,
+    "drawers": [
+      100,
+      700
+    ],
+    "drawer_count": 2,
+    "niches": [
+      {
+        "z": [
+          720,
+          1260
+        ],
+        "pull": 380,
+        "open": 1.0,
+        "label": "Oven + air fryer tray",
+        "items": [
+          {
+            "kind": "oven",
+            "a": [
+              6110,
+              6590
+            ],
+            "depth": 450,
+            "height": 330
+          },
+          {
+            "kind": "air_fryer",
+            "a": [
+              6620,
+              6860
+            ],
+            "depth": 330,
+            "height": 320
+          }
+        ]
+      },
+      {
+        "z": [
+          1290,
+          1760
+        ],
+        "pull": 380,
+        "open": 1.0,
+        "label": "Microwave tray",
+        "items": [
+          {
+            "kind": "microwave",
+            "a": [
+              6130,
+              6630
+            ],
+            "depth": 400,
+            "height": 290
+          }
+        ]
+      }
+    ],
+    "top_doors": [
+      1790,
+      2600
+    ],
+    "note": "Full-height appliance tower on the yard wall (where the fridge was), 830 W x 600 D x 2600 H, like the owner's reference (The Interior Lab, Waterway Terraces II): 2 deep drawers at the bottom, an open niche at 720-1260 with a pull-out tray for the countertop oven + air fryer, a niche at 1290-1760 with a pull-out tray for the microwave, cabinet doors above to the ceiling. Trays slide out 380 on scene['door_kitchen_tray_1/2']. Appliances stay removable (plugged into sockets inside each niche). Covers the yard-wall window for now (owner: ignore the window)."
   }
 }
