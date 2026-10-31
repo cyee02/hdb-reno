@@ -1,0 +1,387 @@
+{
+  "meta": {
+    "design": "Design 4 (queen bed, vanity + 3 m bracket wardrobe on the east wall)",
+    "units": "mm, plan coordinates (same as floor_plan.json: +x right, +y down the page)",
+    "built_by": "blender/scripts/build_main_bedroom.py (MB_DESIGN=4)",
+    "layout": "Per owner's sketch IMG_1380 (2026-10-28): queen bed in the north-west corner, headboard on the west wall; study table along the full west wall below it (1 chair, monitor on the wall); east wall from the window: vanity 400 D, then a 3 m bracket-and-pole wardrobe (no carpentry) with pull-out mesh baskets behind free-sliding bi-fold doors. Full-length mirror on the south wall; bag hooks in the lobby (swapped). No TV.",
+    "orientation": "North = facade/window wall (top of plan). East = facade side wall (right). South = Bath/WC 1 wall with the WC door at x 11950-12650. West = Bedroom 2 wall; lobby + room door to the south-west.",
+    "note": "Product sizes are typical catalogue sizes; confirm before ordering.",
+    "inspiration": "Owner's reference videos: white slotted wall standards + brackets, wire shelf on top, poles hung under it, double hang with a lower shelf, stack of pull-out mesh baskets on runners."
+  },
+  "interior": {
+    "x": [
+      11900,
+      15025
+    ],
+    "y": [
+      100,
+      4350
+    ],
+    "ceiling": 2600,
+    "window": {
+      "x": [
+        12000,
+        14750
+      ],
+      "sill": 900
+    },
+    "note": "Wall-face to wall-face, assuming 150 mm internal / 200 mm external walls: ~3125 W x 4250 L. Verify on site."
+  },
+  "finishes": {
+    "carcass": [
+      0.93,
+      0.92,
+      0.89
+    ],
+    "front": [
+      0.93,
+      0.92,
+      0.89
+    ],
+    "wood": [
+      0.62,
+      0.47,
+      0.32
+    ],
+    "fabric": [
+      0.55,
+      0.57,
+      0.55
+    ],
+    "linen": [
+      0.95,
+      0.95,
+      0.93
+    ]
+  },
+  "bed": {
+    "size": "Queen 1530 x 1910 (SG queen 152 x 190 cm)",
+    "rect": [
+      11900,
+      100,
+      13890,
+      1630
+    ],
+    "headboard": {
+      "side": "west",
+      "thickness": 80,
+      "height": 1100
+    },
+    "frame_height": 300,
+    "mattress": 250,
+    "note": "Headboard on the west wall, long side along the window. Footprint 1990 x 1530 incl. an 80 mm headboard (frame assumed mattress-sized)."
+  },
+  "vanity": {
+    "axis": "y",
+    "back": 15025,
+    "front": "west",
+    "depth": 400,
+    "span": [
+      100,
+      1350
+    ],
+    "top": 750,
+    "stool": {
+      "at": [
+        14400,
+        725
+      ],
+      "size": 380
+    },
+    "note": "Vanity 400 D x 1250 long at the window end of the east wall (window wall to the wardrobe), floating top, open below for the stool. Daylight from the window."
+  },
+  "bracket_wardrobe": {
+    "side": "east",
+    "back": 15025,
+    "span": [
+      1350,
+      4350
+    ],
+    "standards": [
+      1390,
+      2000,
+      2350,
+      3000,
+      3650,
+      4310
+    ],
+    "standard_z": [
+      150,
+      2300
+    ],
+    "shelf": {
+      "z": 2050,
+      "depth": 400
+    },
+    "upper_pole": {
+      "z": 1900,
+      "d": 300
+    },
+    "lower": [
+      {
+        "span": [
+          1350,
+          2350
+        ],
+        "z": 1000,
+        "d": 300,
+        "shelf_z": 1150,
+        "shelf_depth": 300
+      }
+    ],
+    "baskets": {
+      "span": [
+        2350,
+        3000
+      ],
+      "depth": 500,
+      "height": 180,
+      "levels": [
+        120,
+        330,
+        540,
+        750
+      ],
+      "pull": 350,
+      "open": 0
+    },
+    "note": "Not carpentry: 3000 long on the east wall, ~600 deep. Wall standards + brackets, wire shelf at 2050 (boxes on top), upper pole at 1900 full length. North 1000: double hang (shirts over a wire shelf at 1150 + lower pole at 1000 for trousers). Middle 650: 4 pull-out mesh baskets on runners fixed to the standards (each slides out 350; slider per basket in the HDB Reno tab) under a mesh shelf, short hang above. South 1350: long hang."
+  },
+  "bifold": {
+    "side": "east",
+    "x": 14400,
+    "span": [
+      1350,
+      4350
+    ],
+    "height": 2600,
+    "position": [
+      1,
+      1,
+      1,
+      1
+    ],
+    "open_to": [
+      1,
+      1,
+      1,
+      1
+    ],
+    "max_angle": 85,
+    "stack_pitch": 85,
+    "note": "White free-sliding bi-fold doors, 4 pairs (~372 leaves) on one top track 625 from the wall. Each pair folds and slides to either end (-1 = vanity / north end, 0 = closed, +1 = south end). Park them at the SOUTH end: parked at the north end they stick out ~370 right next to the foot of the bed."
+  },
+  "l_desk": {
+    "top": 750,
+    "thickness": 30,
+    "tops": [
+      [
+        11900,
+        1650,
+        12500,
+        3350
+      ]
+    ],
+    "panels": [
+      [
+        11900,
+        1650,
+        12500,
+        1680
+      ],
+      [
+        11900,
+        3320,
+        12500,
+        3350
+      ]
+    ],
+    "posts": [],
+    "chairs": [
+      {
+        "at": [
+          12800,
+          2500
+        ],
+        "faces": "west"
+      }
+    ],
+    "note": "Study table 1700 x 600, the full west wall from the bed to the lobby; end panels, no cabinets below. 1 office chair."
+  },
+  "monitor": {
+    "model": "PRISM+ X340 PRO (34-inch 21:9 curved, 3440 x 1440)",
+    "center_x": 13950,
+    "wall_y": 2270,
+    "center_z": 1080,
+    "width": 810,
+    "height": 361,
+    "curve_radius": 1500,
+    "panel_depth": 16,
+    "housing_depth": 60,
+    "bezel": [
+      8,
+      8,
+      22
+    ],
+    "vesa": 100,
+    "standoff": 80,
+    "note": "PRISM+ X340 PRO on a VESA wall arm on the west wall above the study table, facing east. Bottom edge ~150 above the desk.",
+    "faces": "east",
+    "wall_x": 11900,
+    "center_y": 2500
+  },
+  "hook_rail": {
+    "x": [
+      11300,
+      11850
+    ],
+    "wall_y": 4375,
+    "z": 1650,
+    "hooks": 4,
+    "items": [
+      {
+        "hook": 1,
+        "kind": "bag",
+        "width": 300,
+        "length": 350
+      },
+      {
+        "hook": 3,
+        "kind": "bag",
+        "width": 300,
+        "length": 300
+      }
+    ],
+    "note": "Bag hooks on the lobby's south wall (swapped with the mirror). Starts at x 11300 and bags hang east of ~11350 so the room door's swing clears them."
+  },
+  "mirrors": [
+    {
+      "name": "Full-length mirror",
+      "wall": "south",
+      "wall_y": 4350,
+      "x": [
+        13380,
+        13980
+      ],
+      "z": [
+        100,
+        1900
+      ],
+      "note": "Room's south wall (swapped with the bag hooks), between the WC door and the wardrobe; clear of the folded bi-fold stack (~14030)."
+    }
+  ],
+  "cameras": {
+    "mbr_overview": {
+      "loc": [
+        12.2,
+        -4.1,
+        2.3
+      ],
+      "target": [
+        14.0,
+        -1.2,
+        0.7
+      ],
+      "lens": 14,
+      "note": "from the lobby"
+    },
+    "mbr_wardrobe": {
+      "loc": [
+        12.55,
+        -3.0,
+        1.7
+      ],
+      "target": [
+        15.0,
+        -2.85,
+        1.1
+      ],
+      "lens": 13,
+      "note": "bracket wardrobe"
+    },
+    "mbr_baskets": {
+      "loc": [
+        13.4,
+        -2.0,
+        1.5
+      ],
+      "target": [
+        14.8,
+        -2.7,
+        0.6
+      ],
+      "lens": 18,
+      "note": "pull-out baskets"
+    },
+    "mbr_vanity": {
+      "loc": [
+        13.0,
+        -2.2,
+        1.7
+      ],
+      "target": [
+        15.0,
+        -0.7,
+        0.9
+      ],
+      "lens": 16,
+      "note": "vanity at the window end"
+    },
+    "mbr_gap": {
+      "loc": [
+        14.1,
+        -3.9,
+        1.6
+      ],
+      "target": [
+        14.1,
+        -0.3,
+        0.9
+      ],
+      "lens": 16,
+      "note": "foot of the bed / vanity / wardrobe end"
+    },
+    "mbr_study": {
+      "loc": [
+        13.9,
+        -3.7,
+        1.7
+      ],
+      "target": [
+        11.9,
+        -2.4,
+        0.9
+      ],
+      "lens": 16,
+      "note": "study table"
+    },
+    "mbr_mirror": {
+      "loc": [
+        13.7,
+        -1.9,
+        1.6
+      ],
+      "target": [
+        13.7,
+        -4.35,
+        1.0
+      ],
+      "lens": 18,
+      "note": "full-length mirror on the south wall"
+    },
+    "mbr_hooks": {
+      "loc": [
+        13.2,
+        -3.55,
+        1.75
+      ],
+      "target": [
+        11.5,
+        -4.375,
+        1.2
+      ],
+      "lens": 18,
+      "note": "bag hooks in the lobby"
+    }
+  }
+}

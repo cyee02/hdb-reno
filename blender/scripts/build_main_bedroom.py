@@ -1,7 +1,16 @@
 """Build the main bedroom renovation from blender/data/main_bedroom_design<N>.json.
 
-There are alternative layouts; pick one with env MB_DESIGN (default 2):
+There are alternative layouts; pick one with env MB_DESIGN (default 4):
+  5 - (Claude's recommendation) king bed, headboard on the window wall, against the west wall;
+      3 m bracket wardrobe on the east wall (His north / Hers south, 2 basket stacks); 600 vanity in
+      the SE corner (mirror faces west, away from the bed); study table on the west wall below the bed;
+      full-length mirror in the lobby; bag hooks on the south wall
   1 - bed along the window (headboard east), long table, L-wardrobe in the SE corner, TV on the west wall
+  4 - queen bed headboard on the west wall, study table the full west wall, vanity (400 D) at the
+      window end of the east wall, then a 3 m bracket-and-pole wardrobe with pull-out baskets behind
+      bi-fold doors; mirror on the south wall, bag hooks in the lobby
+  3 - king bed headboard on the west wall, study table below it, full-length wardrobe on the east wall
+      (open to the window at the north end), 600 vanity in the SE corner; no TV
   2 - west wall: vanity | pole hanging system (with wire baskets) behind bi-fold doors | cupboard 2;
       lobby mirror; bed headboard on the window wall, TV feature wall + L-shaped study table behind it
       with a wall-mounted monitor; hook rail on the south wall
@@ -14,7 +23,7 @@ Creates four collections (rebuilt each run, nothing else touched):
 It also registers the design's camera views in scene["room_cameras"] for render_views.py.
 
 Run after build_flat.py:
-    MB_DESIGN=2 Blender -b <file>.blend -P blender/scripts/build_main_bedroom.py
+    MB_DESIGN=4 Blender -b <file>.blend -P blender/scripts/build_main_bedroom.py
 or send via the Blender MCP `execute_blender_code` tool (set os.environ["MB_DESIGN"] first).
 """
 import importlib
@@ -35,7 +44,7 @@ try:
 except NameError:
     ROOT = HDB_RENO_ROOT
 
-DESIGN = os.environ.get("MB_DESIGN", "2")
+DESIGN = os.environ.get("MB_DESIGN", "4")
 DATA = os.path.join(ROOT, "blender", "data", f"main_bedroom_design{DESIGN}.json")
 sys.path.insert(0, os.path.join(ROOT, "blender", "scripts"))
 import door_motion  # noqa: E402
@@ -212,6 +221,10 @@ def wardrobe_leg(leg, d, m, a):
     for sec in leg["sections"]:
         edges.append(edges[-1] + sec["width"])
     for e in edges:                                               # section side panels
+        if e == u0 and leg.get("open_start"):                     # no end panel (e.g. open to the window)
+            continue
+        if e == edges[-1] and leg.get("open_end"):
+            continue
         L.box(m, max(u0, e - t / 2), min(u1, e + t / 2), 0, D, 0, H, S["carcass"])
     for i, sec in enumerate(leg["sections"]):
         b0, b1 = edges[i] + t / 2, edges[i + 1] - t / 2
@@ -307,7 +320,7 @@ def chair(f, c, back="south"):
 
 
 def bed(d, furn):
-    """Queen bed; headboard on the north (window) or east wall."""
+    """Bed; headboard on the north (window), east or west wall."""
     x0, y0, x1, y1 = d["rect"]
     hb = d["headboard"]
     fz, mz, ht = d["frame_height"], d["mattress"], hb["thickness"]
@@ -324,6 +337,17 @@ def bed(d, furn):
         for k in range(2):                                                        # pillows
             py = y0 + 20 + k * (w + 20)
             f.box(xh - 480, py, xh - 40, py + w, top, top + 120, S["linen"])
+    elif hb["side"] == "west":
+        xh = x0 + ht
+        f.box(x0, y0, xh, y1, 0, hb["height"], S["fabric"])                       # headboard
+        f.box(xh + 30, y0 + 30, x1 - 30, y1 - 30, 0, 100, S["black"])
+        f.box(xh, y0, x1, y1, 100, fz, S["fabric"])
+        f.box(xh + 5, y0 + 10, x1 - 10, y1 - 10, fz, top, S["linen"])
+        f.box(xh + 600, y0 + 5, x1 - 5, y1 - 5, top - 120, top + 40, S["duvet"])
+        w = (y1 - y0 - 60) / 2
+        for k in range(2):
+            py = y0 + 20 + k * (w + 20)
+            f.box(xh + 40, py, xh + 480, py + w, top, top + 120, S["linen"])
     else:  # north
         yh = y0 + ht
         f.box(x0, y0, x1, yh, 0, hb["height"], S["fabric"])
@@ -469,7 +493,8 @@ def wire_baskets(d, back, m, a):
 
 
 def bifold_doors(d, coll, mats):
-    """Free-sliding bi-fold wardrobe doors on a north-south track at x, folding east into the room.
+    """Free-sliding bi-fold wardrobe doors on a north-south track at x, folding into the room
+    (east for a west-wall wardrobe; west when d["side"] == "east").
 
     Each pair = 2 leaves hinged together; both outer ends ride the top track, so a pair can fold
     AND slide to either end of the opening, stacking flush there. One control per pair,
@@ -478,6 +503,7 @@ def bifold_doors(d, coll, mats):
     park the middle pair at an end, send the pair between it and that end there first.
     """
     x, (y0, y1), H = d["x"], d["span"], d["height"]
+    sd = -1 if d.get("side") == "east" else 1               # leaves fold into the room: east (+x) or west
     starts = d["position"]
     n = len(starts)
     P = (y1 - y0) / n
@@ -493,7 +519,8 @@ def bifold_doors(d, coll, mats):
         m = Mesh()
         m.prism((x, a0), (x, a1), t, 10, H - 45, S["front"])
         if handle_at is not None:                          # pull near the fold, room side
-            m.box(x + 10, handle_at - 8, x + 30, handle_at + 8, 900, 1300, S["chrome"])
+            hx0, hx1 = sorted((x + sd * 10, x + sd * 30))
+            m.box(hx0, handle_at - 8, hx1, handle_at + 8, 900, 1300, S["chrome"])
         obj = m.finish(name, coll, mats)
         pv = Vector((x / 1000, -pivot / 1000, 0))
         obj.data.transform(Matrix.Translation(-pv))
@@ -520,8 +547,104 @@ def bifold_doors(d, coll, mats):
         door_motion.drive_channel(a, gid, "location", 1, f"-({north}) / 1000")
         door_motion.drive_channel(b, gid, "location", 1, f"-({south}) / 1000")
         # Leaf a points south from its pivot and turns east (CCW); leaf b points north and turns east (CW).
-        door_motion.drive_channel(a, gid, "rotation_euler", 2, f"abs(o) * {T:.5f}")
-        door_motion.drive_channel(b, gid, "rotation_euler", 2, f"-abs(o) * {T:.5f}")
+        door_motion.drive_channel(a, gid, "rotation_euler", 2, f"{sd} * abs(o) * {T:.5f}")
+        door_motion.drive_channel(b, gid, "rotation_euler", 2, f"{-sd} * abs(o) * {T:.5f}")
+
+
+def bracket_wardrobe(d, coll, acc, mats):
+    """Wall-mounted metal wardrobe system, no carpentry (like the owner's reference videos):
+    slotted wall standards + brackets holding a wire shelf on top, hanging poles, optional
+    lower shelf + pole for double hang, and a zone of pull-out mesh baskets that hang on runners
+    fixed to the standards. Each basket slides out on scene["door_basket_<k>"] (0 in, 1 out).
+
+    d["side"] = "west" (wall at x = back, room to the east) or "east" (room to the west).
+    """
+    back, (y0, y1) = d["back"], d["span"]
+    s = -1 if d.get("side") == "east" else 1
+    m, a = Mesh(), Mesh()
+
+    def bx(mm, d0, d1, ya, yb, z0, z1, slot):            # box by distance from the wall (d0-d1)
+        xa, xb = sorted((back + s * d0, back + s * d1))
+        mm.box(xa, ya, xb, yb, z0, z1, slot)
+
+    def wire_shelf(depth, ya, yb, z):
+        bx(m, 0, 20, ya, yb, z - 30, z, S["chrome"])                          # back rail
+        bx(m, depth - 15, depth, ya, yb, z - 40, z, S["chrome"])              # front lip
+        yy = ya + 10
+        while yy < yb - 5:                                                   # wires to the wall
+            bx(m, 0, depth, yy, yy + 4, z - 6, z, S["chrome"])
+            yy += 30
+
+    sh, up = d["shelf"], d["upper_pole"]
+    zs0, zs1 = d.get("standard_z", [150, 2300])
+    for y in d["standards"]:
+        bx(m, 0, 15, y - 12, y + 12, zs0, zs1, S["chrome"])                  # slotted standard
+        bx(m, 0, sh["depth"], y - 6, y + 6, sh["z"] - 70, sh["z"] - 40, S["chrome"])  # shelf bracket
+        bx(m, up["d"] - 8, up["d"] + 8, y - 6, y + 6, up["z"], sh["z"] - 40, S["chrome"])  # pole drop
+    wire_shelf(sh["depth"], y0, y1, sh["z"])
+    m.cyl_y(back + s * up["d"], up["z"], 14, y0, y1, S["chrome"])            # upper pole, full length
+
+    for lo in d.get("lower", []):                       # double hang: lower wire shelf + pole
+        ly0, ly1 = lo["span"]
+        for y in d["standards"]:
+            if ly0 - 50 <= y <= ly1 + 50:
+                bx(m, 0, lo["shelf_depth"], y - 6, y + 6, lo["shelf_z"] - 70, lo["shelf_z"] - 40, S["chrome"])
+                bx(m, lo["d"] - 8, lo["d"] + 8, y - 6, y + 6, lo["z"], lo["shelf_z"] - 40, S["chrome"])
+        wire_shelf(lo["shelf_depth"], ly0, ly1, lo["shelf_z"])
+        m.cyl_y(back + s * lo["d"], lo["z"], 14, ly0, ly1, S["chrome"])
+
+    # One basket stack (dict) or several (list, e.g. His / Hers); baskets are numbered 1..n across them.
+    bks = d.get("baskets") or []
+    bks = [bks] if isinstance(bks, dict) else bks
+    door_motion.forget_groups("basket_")
+    nb = 0
+    for bk in bks:
+        by0, by1 = bk["span"]
+        D, h, pull = bk["depth"], bk["height"], bk["pull"]
+        top = bk["levels"][-1] + h + bk.get("shelf_gap", 80)
+        wire_shelf(D, by0, by1, top)                                        # mesh shelf over the baskets
+        for y in (by0, by1):
+            bx(m, 0, D, y - 6, y + 6, top - 70, top - 40, S["chrome"])
+        for z in bk["levels"]:
+            k = nb
+            nb += 1
+            for y in (by0 + 12, by1 - 27):                                  # runners on the standards
+                bx(m, 20, D, y, y + 15, z + h - 30, z + h - 15, S["chrome"])
+            b = Mesh()
+            q0, q1, p0, p1 = 30, D - 10, by0 + 30, by1 - 30
+            bx(b, q0, q1, p0, p1, z, z + 5, S["basket"])                    # mesh base
+            for d0, d1 in ((q0, q0 + 5), (q1 - 5, q1)):
+                bx(b, d0, d1, p0, p1, z, z + h, S["basket"])
+            for ya, yb in ((p0, p0 + 5), (p1 - 5, p1)):
+                bx(b, q0, q1, ya, yb, z, z + h, S["basket"])
+            bx(b, q0, q1, p0 - 12, p1 + 12, z + h - 15, z + h, S["chrome"])  # rim riding the runners
+            bx(b, q1, q1 + 15, (p0 + p1) / 2 - 80, (p0 + p1) / 2 + 80, z + h - 35, z + h - 15, S["chrome"])
+            bx(b, q0 + 20, q1 - 20, p0 + 20, p1 - 20, z + 5, z + h - 40,      # folded clothes inside
+               S["clothes_a"] if k % 2 else S["linen"])
+            obj = b.finish(f"MB_Basket {k + 1}", coll, mats)
+            gid = f"basket_{k + 1}"
+            label = f"Wardrobe basket {k + 1}" + (f" ({bk['owner']})" if "owner" in bk else "") + " (pull out)"
+            door_motion.register_group(gid, label, bk.get("open", 0))
+            door_motion.drive(obj, gid, (s * pull / 1000, 0, 0))
+
+    # garments for scale: short hang over the lower poles / baskets, long hang elsewhere
+    k, y = 0, y0 + 30
+    while y < y1 - 30:
+        lo = next((lo for lo in d.get("lower", []) if lo["span"][0] <= y <= lo["span"][1]), None)
+        over_bk = any(bk["span"][0] <= y <= bk["span"][1] for bk in bks)
+        slot = S["clothes_a"] if (y // 400) % 2 else S["clothes_b"]
+        drop = 720 if lo else 750 if over_bk else 1150
+        bx(a, up["d"] - 230, up["d"] + 230, y, y + 12, up["z"] - drop + (k % 3) * 60, up["z"] - 30, slot)
+        if lo:
+            bx(a, lo["d"] - 230, lo["d"] + 230, y, y + 12, lo["z"] - 600 + (k % 2) * 40, lo["z"] - 30, S["black"])
+        y += 45
+        k += 1
+    yy = y0 + 40                                                            # storage boxes on top
+    while yy + 380 < y1:
+        bx(a, 40, sh["depth"] - 40, yy, yy + 360, sh["z"], sh["z"] + 260, S["box"])
+        yy += 420
+    m.finish("MB_BracketWardrobe", coll, mats)
+    a.finish("MB_BracketWardrobe_Clothes", acc, mats)
 
 
 def hook_rail(d, m, a):
@@ -611,7 +734,12 @@ def l_desk(d, carp, furn):
         m.box(x0, y0, x1, y1, 0, top - t, S["carcass"])
     for px, py in d["posts"]:
         m.box(px, py - 40, px + 40, py, 0, top - t, S["chrome"])
-    o = d["overhead"]
+    o = d.get("overhead")
+    f = furn()
+    for c in d["chairs"]:
+        office_chair(f, c["at"], c["faces"])
+    if not o:
+        return m, f
     x0, y0, x1, y1 = o["rect"]
     z0, z1 = o["z"]
     m.box(x0 + 18, y0, x1, y1, z0, z1, S["carcass"])                                  # wall cabinet body
@@ -621,10 +749,24 @@ def l_desk(d, carp, furn):
         hy = y0 + (k + 1) * dw - 60 if k % 2 == 0 else y0 + k * dw + 40
         m.box(x0 - 20, hy, x0, hy + 20, z0 + 40, z0 + 200, S["chrome"])
     m.box(x0 + 30, y0 + 20, x0 + 80, y1 - 20, z0 - 15, z0, S["led"])                  # task light under
-    f = furn()
-    for c in d["chairs"]:
-        office_chair(f, c["at"], c["faces"])
     return m, f
+
+
+def bedsides(items, m, a):
+    """Bedside tables / floating wall shelves: wood top on a carcass (or just a shelf), optional lamp."""
+    for it in items:
+        x0, y0, x1, y1 = it["rect"]
+        z0, z1 = it["z"]
+        if it.get("floating"):
+            m.box(x0, y0, x1, y1, z1 - 25, z1, S["wood"])
+        else:
+            m.box(x0, y0, x1, y1, z0, z1 - 25, S["carcass"])
+            m.box(x0, y0, x1, y1, z1 - 25, z1, S["wood"])
+        if it.get("lamp"):
+            cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
+            a.cyl_z(cx, cy, 60, z1, z1 + 15, S["chrome"])
+            a.cyl_z(cx, cy, 8, z1 + 15, z1 + 260, S["chrome"])
+            a.cyl_z(cx, cy, 100, z1 + 220, z1 + 380, S["linen"])
 
 
 def wall_mirrors(items, m):
@@ -687,6 +829,10 @@ def main():
         pole_closet(data["pole_closet"], pm, pa)
         pm.finish("MB_HangingSystem", carp, mats)
         pa.finish("MB_HangingClothes", acc, mats)
+    if "bracket_wardrobe" in data:
+        bracket_wardrobe(data["bracket_wardrobe"], carp, acc, mats)
+    else:
+        door_motion.forget_groups("basket_")
     if "bifold" in data:
         bifold_doors(data["bifold"], carp, mats)
     else:
@@ -697,12 +843,23 @@ def main():
         hm.finish("MB_HookRail", carp, mats)
         ha.finish("MB_HookRail_Items", acc, mats)
     if "monitor" in data:
-        wall_monitor(data["monitor"], Mesh).finish("MB_Monitor", appl, mats)
+        mon = data["monitor"]
+        if mon.get("faces", "south") == "east":            # on a west wall: build facing south, turn 90°
+            obj = wall_monitor({**mon, "center_x": 0, "wall_y": 0}, Mesh).finish("MB_Monitor", appl, mats)
+            obj.rotation_euler[2] = math.pi / 2
+            obj.location = (mon["wall_x"] / 1000, -mon["center_y"] / 1000, 0)
+        elif mon.get("faces") == "north":                   # on a south wall: build facing south, turn 180°
+            obj = wall_monitor({**mon, "center_x": 0, "wall_y": 0}, Mesh).finish("MB_Monitor", appl, mats)
+            obj.rotation_euler[2] = math.pi
+            obj.location = (mon["center_x"] / 1000, -mon["wall_y"] / 1000, 0)
+        else:
+            wall_monitor(mon, Mesh).finish("MB_Monitor", appl, mats)
     bed(data["bed"], Mesh).finish("MB_Bed", furn, mats)
-    cm, tm = tv(data["tv"], Mesh, Mesh)
-    if cm:
-        cm.finish("MB_TVConsole", carp, mats)
-    tm.finish("MB_TV", appl, mats)
+    if "tv" in data:
+        cm, tm = tv(data["tv"], Mesh, Mesh)
+        if cm:
+            cm.finish("MB_TVConsole", carp, mats)
+        tm.finish("MB_TV", appl, mats)
     if "feature_wall" in data:
         feature_wall(data["feature_wall"], Mesh).finish("MB_FeatureWall", carp, mats)
     if "partitions" in data:
@@ -718,6 +875,11 @@ def main():
             vf.finish("MB_VanityStool", furn, mats)
         else:
             vf.bm.free()
+    if "bedsides" in data:
+        bm_, ba_ = Mesh(), Mesh()
+        bedsides(data["bedsides"], bm_, ba_)
+        bm_.finish("MB_Bedsides", furn, mats)
+        ba_.finish("MB_BedsideLamps", acc, mats)
     if "mirrors" in data:
         mm = Mesh()
         wall_mirrors(data["mirrors"], mm)
