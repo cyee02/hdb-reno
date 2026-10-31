@@ -1,0 +1,347 @@
+{
+  "meta": {
+    "design": "Design 3 (king bed, east-wall wardrobe)",
+    "units": "mm, plan coordinates (same as floor_plan.json: +x right, +y down the page)",
+    "built_by": "blender/scripts/build_main_bedroom.py (MB_DESIGN=3)",
+    "layout": "Per owner's sketch 'Design 3' (2026-10-28): king bed in the north-west corner, headboard on the west (Bedroom 2) wall, long side along the window; study table along the west wall right beside the bed (1 chair, monitor on the wall); full-length wardrobe on the east wall, open at the window end (no end panel) so daylight reaches it; 600 vanity in the south-east corner. No TV. Hook rail and lobby mirror unchanged from Design 2.",
+    "orientation": "North = facade/window wall (top of plan). East = facade side wall (right). South = Bath/WC 1 wall with the WC door at x 11950-12650. West = Bedroom 2 wall; lobby + room door to the south-west.",
+    "note": "Product sizes are typical catalogue sizes; confirm before ordering."
+  },
+  "interior": {
+    "x": [
+      11900,
+      15025
+    ],
+    "y": [
+      100,
+      4350
+    ],
+    "ceiling": 2600,
+    "window": {
+      "x": [
+        12000,
+        14750
+      ],
+      "sill": 900
+    },
+    "note": "Wall-face to wall-face, assuming 150 mm internal / 200 mm external walls: ~3125 W x 4250 L. Verify on site."
+  },
+  "finishes": {
+    "carcass": [
+      0.93,
+      0.92,
+      0.89
+    ],
+    "front": [
+      0.93,
+      0.92,
+      0.89
+    ],
+    "wood": [
+      0.62,
+      0.47,
+      0.32
+    ],
+    "fabric": [
+      0.55,
+      0.57,
+      0.55
+    ],
+    "linen": [
+      0.95,
+      0.95,
+      0.93
+    ]
+  },
+  "bed": {
+    "size": "King 1830 x 1910 (SG king 183 x 190 cm)",
+    "rect": [
+      11900,
+      100,
+      13890,
+      1930
+    ],
+    "headboard": {
+      "side": "west",
+      "thickness": 80,
+      "height": 1100
+    },
+    "frame_height": 300,
+    "mattress": 250,
+    "note": "Headboard on the west wall, long side along the window. Footprint 1990 x 1830 incl. an 80 mm headboard (frame assumed mattress-sized). Get in from the south side; the window-side sleeper gets in from the foot. Foot of bed to wardrobe front: 535 mm."
+  },
+  "wardrobe": {
+    "height": 2600,
+    "depth": 600,
+    "board": 18,
+    "top_cabinet": 2050,
+    "show_doors": false,
+    "long_hang_rod": 1850,
+    "short_hang_rod": 1750,
+    "drawers_top": 700,
+    "legs": [
+      {
+        "name": "East-wall wardrobe",
+        "axis": "y",
+        "back": 15025,
+        "front": "west",
+        "span": [
+          100,
+          3750
+        ],
+        "open_start": true,
+        "sections": [
+          {
+            "kind": "long_hang",
+            "width": 915,
+            "owner": "His",
+            "note": "Window end, no end panel: open to the window. Faces the foot of the bed (535 aisle) - no drawers here."
+          },
+          {
+            "kind": "long_hang",
+            "width": 915,
+            "owner": "Hers",
+            "note": "Faces the foot of the bed - no drawers here."
+          },
+          {
+            "kind": "short_hang",
+            "width": 910,
+            "owner": "His",
+            "note": "3 drawers + short hang; opens onto the open floor past the bed."
+          },
+          {
+            "kind": "short_hang",
+            "width": 910,
+            "owner": "Hers",
+            "note": "3 drawers + short hang."
+          }
+        ]
+      }
+    ],
+    "note": "Full height, 600 D, 3650 long on the east wall from the window wall to the vanity. No panel at the window end (owner's choice, for daylight). Long hang in front of the bed, drawers past the bed where there's room to pull them out. Sliding doors recommended (the aisle at the bed is 535)."
+  },
+  "vanity": {
+    "axis": "y",
+    "back": 15025,
+    "front": "west",
+    "depth": 600,
+    "span": [
+      3750,
+      4350
+    ],
+    "top": 750,
+    "stool": {
+      "at": [
+        14150,
+        4010
+      ],
+      "size": 380
+    },
+    "note": "600 vanity (along the wall) in the south-east corner, flush with the wardrobe: floating top, open below for the stool."
+  },
+  "l_desk": {
+    "top": 750,
+    "thickness": 30,
+    "tops": [
+      [
+        11900,
+        1950,
+        12500,
+        3350
+      ]
+    ],
+    "panels": [
+      [
+        11900,
+        1950,
+        12500,
+        1980
+      ],
+      [
+        11900,
+        3320,
+        12500,
+        3350
+      ]
+    ],
+    "posts": [],
+    "chairs": [
+      {
+        "at": [
+          12800,
+          2650
+        ],
+        "faces": "west"
+      }
+    ],
+    "note": "Study table 1400 x 600 along the west wall, right beside the bed (doubles as the bedside table on that side); end panels both ends, no cabinets below. 1 office chair."
+  },
+  "monitor": {
+    "model": "PRISM+ X340 PRO (34-inch 21:9 curved, 3440 x 1440)",
+    "center_x": 13950,
+    "wall_y": 2270,
+    "center_z": 1080,
+    "width": 810,
+    "height": 361,
+    "curve_radius": 1500,
+    "panel_depth": 16,
+    "housing_depth": 60,
+    "bezel": [
+      8,
+      8,
+      22
+    ],
+    "vesa": 100,
+    "standoff": 80,
+    "note": "PRISM+ X340 PRO on a VESA wall arm on the west wall above the study table, facing east. Bottom edge ~150 above the desk.",
+    "faces": "east",
+    "wall_x": 11900,
+    "center_y": 2650
+  },
+  "hook_rail": {
+    "x": [
+      13300,
+      14400
+    ],
+    "wall_y": 4350,
+    "z": 1650,
+    "hooks": 7,
+    "items": [
+      {
+        "hook": 1,
+        "kind": "towel",
+        "width": 350,
+        "length": 600
+      },
+      {
+        "hook": 3,
+        "kind": "bag",
+        "width": 380,
+        "length": 350
+      },
+      {
+        "hook": 5,
+        "kind": "clothes",
+        "width": 450,
+        "length": 800
+      }
+    ],
+    "note": "Timber hook rail on the south wall between the end of the study table and the WC door, for towels, bags and clothes. Hooks at 1650."
+  },
+  "mirrors": [
+    {
+      "name": "Full-length mirror",
+      "wall": "south",
+      "wall_y": 4375,
+      "x": [
+        11150,
+        11750
+      ],
+      "z": [
+        100,
+        1900
+      ],
+      "note": "Lobby south wall - on your right as you walk in from the room door (clear of the door swing)."
+    }
+  ],
+  "cameras": {
+    "mbr_overview": {
+      "loc": [
+        12.2,
+        -4.1,
+        2.3
+      ],
+      "target": [
+        14.0,
+        -1.2,
+        0.7
+      ],
+      "lens": 14,
+      "note": "from the lobby: bed, wardrobe, study table"
+    },
+    "mbr_gap": {
+      "loc": [
+        14.15,
+        -3.9,
+        1.6
+      ],
+      "target": [
+        14.15,
+        -0.3,
+        0.9
+      ],
+      "lens": 18,
+      "note": "aisle between the foot of the bed and the wardrobe"
+    },
+    "mbr_wardrobe": {
+      "loc": [
+        12.7,
+        -2.6,
+        1.6
+      ],
+      "target": [
+        15.0,
+        -1.9,
+        1.2
+      ],
+      "lens": 14,
+      "note": "east-wall wardrobe"
+    },
+    "mbr_window": {
+      "loc": [
+        13.3,
+        -1.3,
+        1.9
+      ],
+      "target": [
+        14.7,
+        -0.1,
+        1.3
+      ],
+      "lens": 14,
+      "note": "wardrobe's open window end"
+    },
+    "mbr_study": {
+      "loc": [
+        13.9,
+        -3.7,
+        1.7
+      ],
+      "target": [
+        11.9,
+        -2.4,
+        0.9
+      ],
+      "lens": 16,
+      "note": "study table beside the bed"
+    },
+    "mbr_vanity": {
+      "loc": [
+        13.1,
+        -2.9,
+        1.6
+      ],
+      "target": [
+        15.0,
+        -4.05,
+        0.9
+      ],
+      "lens": 16,
+      "note": "vanity in the SE corner + hook rail"
+    },
+    "mbr_mirror": {
+      "loc": [
+        10.9,
+        -3.9,
+        1.6
+      ],
+      "target": [
+        12.0,
+        -4.25,
+        1.2
+      ],
+      "lens": 14,
+      "note": "walking in: full-length mirror on the right"
+    }
+  }
+}
