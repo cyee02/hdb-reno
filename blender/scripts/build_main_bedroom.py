@@ -1,6 +1,6 @@
 """Build the main bedroom renovation from blender/data/main_bedroom_design<N>.json.
 
-There are alternative layouts; pick one with env MB_DESIGN (default 4):
+There are alternative layouts; pick one with env MB_DESIGN (default 5):
   5 - (Claude's recommendation) king bed, headboard on the window wall, against the west wall;
       3 m bracket wardrobe on the east wall (His north / Hers south, 2 basket stacks); 600 vanity in
       the SE corner (mirror faces west, away from the bed); study table on the west wall below the bed;
@@ -23,7 +23,7 @@ Creates four collections (rebuilt each run, nothing else touched):
 It also registers the design's camera views in scene["room_cameras"] for render_views.py.
 
 Run after build_flat.py:
-    MB_DESIGN=4 Blender -b <file>.blend -P blender/scripts/build_main_bedroom.py
+    MB_DESIGN=5 Blender -b <file>.blend -P blender/scripts/build_main_bedroom.py
 or send via the Blender MCP `execute_blender_code` tool (set os.environ["MB_DESIGN"] first).
 """
 import importlib
@@ -44,7 +44,7 @@ try:
 except NameError:
     ROOT = HDB_RENO_ROOT
 
-DESIGN = os.environ.get("MB_DESIGN", "4")
+DESIGN = os.environ.get("MB_DESIGN", "5")
 DATA = os.path.join(ROOT, "blender", "data", f"main_bedroom_design{DESIGN}.json")
 sys.path.insert(0, os.path.join(ROOT, "blender", "scripts"))
 import door_motion  # noqa: E402

@@ -3,7 +3,10 @@
 Creates these collections (rebuilt each run, nothing else touched):
   Carpentry.Kitchen   - straight base + top cabinet run, C1 coffee/wine cupboard,
                         full-height glass sliding partition
-  Appliances.Kitchen  - fridge, hob, hood, oven, sink, wine cellar, coffee machine
+  Appliances.Kitchen  - fridge (French doors open on scene["door_fridge"], food inside), hob, hood,
+                        sink, wine cellar, coffee machine
+  (Carpentry.Kitchen also has the full-height appliance tower with pull-out trays for the
+   countertop oven, air fryer and microwave: scene["door_kitchen_tray_<k>"])
   Furniture.Kitchen   - movable island
   Furniture.Dining    - 6-seater dining table + chairs
   Accessories.Kitchen - whisky bottles, wine glasses, tea + matcha set
@@ -22,6 +25,7 @@ import sys
 
 import bpy
 import bmesh
+from mathutils import Matrix
 
 HDB_RENO_ROOT = os.path.expanduser("~/workspace/hdb-reno")
 try:
@@ -37,7 +41,8 @@ import door_motion  # noqa: E402
 importlib.reload(door_motion)  # pick up edits when re-run inside a live Blender
 
 SLOTS = ["carcass", "front", "counter", "wood", "frame", "glass", "glass_dark", "steel",
-         "chrome", "appliance", "led", "bottle_wine", "bottle_whisky", "ceramic", "matcha", "black"]
+         "chrome", "appliance", "led", "bottle_wine", "bottle_whisky", "ceramic", "matcha", "black",
+         "fridge_glass", "fridge_inner", "food_red", "food_orange", "food_green", "milk"]
 S = {name: i for i, name in enumerate(SLOTS)}
 
 
@@ -86,6 +91,12 @@ def materials(fin):
         material("KT_Ceramic", (0.93, 0.91, 0.86), 0.3),
         material("KT_Matcha", (0.40, 0.55, 0.25), 0.6),
         material("KT_Black", (0.05, 0.05, 0.05), 0.5),
+        material("KT_FridgeGlass", (0.16, 0.14, 0.17), 0.06, metallic=0.35),   # Mirror Mauve Gray
+        material("KT_FridgeInner", (0.94, 0.96, 0.99), 0.4),
+        material("KT_FoodRed", (0.80, 0.15, 0.12), 0.4),
+        material("KT_FoodOrange", (0.95, 0.55, 0.10), 0.4),
+        material("KT_FoodGreen", (0.30, 0.60, 0.20), 0.5),
+        material("KT_Milk", (0.97, 0.97, 0.95), 0.3),
     ]
 
 
@@ -204,7 +215,7 @@ def base_run(run, bc, d, mk):
     else:
         # An east-facing run stops at a north-facing run's worktop edge so a corner doesn't overlap.
         f.box(a0, a1 - (20 if run["front"] == "east" else 0), -depth, 20, ct, top, S["counter"])
-    oven = d["oven"]["x"]
+    oven = d["oven"]["x"] if "oven" in d else None             # built-in oven is optional
     dish = d["dishwasher"]["x"]
     for k, fr in enumerate(run["fronts"]):
         s, e = fr
@@ -348,21 +359,151 @@ def c1_glass(c, mk):
 
 # ---------- appliances ----------
 
-def fridge(fr, mk):
-    m = mk()
-    f, (a0, a1), depth = unit_frame(m, fr["rect"], fr["front"])
-    h = fr["height"]
-    f.box(a0 + 5, a1 - 5, -depth, -30, 20, h, S["appliance"])
-    mid = (a0 + a1) / 2
-    split = 1050
-    f.box(a0 + 5, mid - 2, -30, 0, split + 2, h, S["appliance"])  # French doors
-    f.box(mid + 2, a1 - 5, -30, 0, split + 2, h, S["appliance"])
-    for zz0, zz1 in ((700, split - 2), (380, 698), (20, 378)):    # drawers
-        f.box(a0 + 5, a1 - 5, -30, 0, zz0, zz1, S["appliance"])
-    f.box(mid - 30, mid - 18, 0, 25, split + 100, split + 600, S["chrome"])
-    f.box(mid + 18, mid + 30, 0, 25, split + 100, split + 600, S["chrome"])
-    f.box(mid - 50, mid + 50, -2, 1, h - 260, h - 180, S["glass_dark"])  # display
-    return m, "Fridge (multi-door)"
+def fridge(fr, mats, coll):
+    """French-door fridge (modelled on the Hitachi R-GWC670TS) facing north: glass body, wood strip,
+    2 small + 2 large drawers, an open fresh-food cavity with glass shelves, a vacuum drawer and
+    food, and two doors with door bins that swing open on scene["door_fridge"] (0 closed - 1 open)."""
+    x0, y0, x1, y1 = fr["rect"]                    # y0 = front face of the closed doors
+    H, split, strip, dt = fr["height"], fr["split"], fr["strip"], fr["door_thickness"]
+    yb = y0 + dt                                   # front face of the body
+    w = 45                                         # wall thickness of the cavity
+    body = Mesh()
+    g = S["fridge_glass"]
+    # lower body + drawer fronts
+    body.box(x0, yb, x1, y1, 20, split - strip, g)
+    mid = (x0 + x1) / 2
+    for k, (z0, z1) in enumerate(fr["drawers"]):
+        if k == len(fr["drawers"]) - 1:            # two small drawers side by side
+            body.box(x0 + 2, y0, mid - 2, yb, z0, z1, g)
+            body.box(mid + 2, y0, x1 - 2, yb, z0, z1, g)
+        else:
+            body.box(x0 + 2, y0, x1 - 2, yb, z0, z1, g)
+        body.box(x0 + 2, y0 - 1, x1 - 2, y0, z1 - 3, z1, S["black"])         # shadow gap
+    body.box(x0, y0, x1, y1, split - strip, split, S["wood"])               # walnut strip
+    body.box(x0, yb, x1, y1, 0, 20, S["black"])                              # plinth
+    # fresh-food cavity: outer shell + white liner
+    for bx in ((x0, yb, x0 + w, y1), (x1 - w, yb, x1, y1), (x0, y1 - w, x1, y1)):
+        body.box(*bx, split, H, g)
+    body.box(x0, yb, x1, y1, H - w, H, g)                                     # top
+    body.box(x0 + w, yb, x1 - w, y1 - w, split, split + 35, S["fridge_inner"])  # floor
+    for bx in ((x0 + w, yb, x0 + w + 4, y1 - w), (x1 - w - 4, yb, x1 - w, y1 - w),
+               (x0 + w, y1 - w - 4, x1 - w, y1 - w)):
+        body.box(*bx, split + 35, H - w, S["fridge_inner"])
+    body.box(x0 + w, yb, x1 - w, y1 - w, H - w - 4, H - w, S["fridge_inner"])
+    body.box(mid - 200, y1 - w - 300, mid + 200, y1 - w - 260, H - w - 12, H - w - 4, S["led"])
+    sy0, sy1 = yb + 110, y1 - w - 5                # shelves clear the door bins
+    shelves = [split + 210, split + 420, split + 630]
+    for z in shelves:
+        body.box(x0 + w + 4, sy0, x1 - w - 4, sy1, z - 6, z, S["glass"])
+    # vacuum / chilled drawer on the floor
+    body.box(x0 + w + 10, sy0, x1 - w - 10, sy1, split + 35, split + 45, S["glass"])
+    body.box(x0 + w + 10, sy0 - 4, x1 - w - 10, sy0, split + 35, split + 170, S["glass_dark"])
+    food = Mesh()
+    food.box(x0 + 120, sy0 + 60, x0 + 330, sy0 + 260, split + 45, split + 95, S["food_red"])   # meat
+    food.box(x0 + 380, sy0 + 60, x0 + 560, sy0 + 260, split + 45, split + 90, S["food_orange"])  # salmon
+    # shelf 1: glass containers + eggs + greens
+    z = shelves[0]
+    for k in range(3):
+        food.box(x0 + 80 + k * 230, sy0 + 80, x0 + 270 + k * 230, sy0 + 280, z, z + 90, S["glass"])
+        food.box(x0 + 95 + k * 230, sy0 + 95, x0 + 255 + k * 230, sy0 + 265, z, z + 60,
+                 (S["food_green"], S["food_red"], S["food_orange"])[k])
+    # shelf 2: pot + cake tarts
+    z = shelves[1]
+    food.cyl_z(x0 + 560, sy0 + 230, 130, z, z + 140, S["ceramic"])
+    for k in range(3):
+        food.cyl_z(x0 + 140 + k * 110, sy0 + 120, 40, z, z + 50, S["food_red"], n=12)
+    # shelf 3: jars + boxes
+    z = shelves[2]
+    for k in range(5):
+        food.cyl_z(x0 + 120 + k * 140, sy0 + 150, 45, z, z + 120 + (k % 2) * 40,
+                   (S["glass"], S["food_green"], S["ceramic"], S["food_orange"], S["glass"])[k], n=16)
+    body.finish("KT_Fridge body (Hitachi R-GWC670TS)", coll, mats)
+    food.finish("KT_Fridge food", coll, mats)
+
+    door_motion.register_group("fridge", "Fridge French doors", fr.get("open", 0))
+    T = math.radians(fr.get("max_angle", 100))
+    for side, (a, b, hinge, sign) in {"left": (x0, mid - 2, x0, 1), "right": (mid + 2, x1, x1, -1)}.items():
+        m = Mesh()
+        m.box(a, y0, b, yb, split + 2, H, g)                                 # glass door
+        m.box(a + 20, yb, b - 20, yb + 8, split + 30, H - 30, S["fridge_inner"])  # inner liner
+        for k, zb in enumerate((split + 120, split + 370, split + 620)):     # door bins + bottles
+            m.box(a + 40, yb + 8, b - 40, yb + 100, zb, zb + 10, S["glass"])
+            m.box(a + 40, yb + 92, b - 40, yb + 100, zb, zb + 90, S["glass"])
+            n = 4
+            for j in range(n):
+                cx = a + 80 + j * (b - a - 160) / (n - 1)
+                h = 220 if k == 2 else 180 if k == 1 else 120
+                slot = (S["milk"], S["bottle_whisky"], S["food_green"], S["bottle_wine"])[(j + k) % 4]
+                m.cyl_z(cx, yb + 55, 32, zb + 10, zb + 10 + h, slot, n=12)
+        obj = m.finish(f"KT_Fridge door {side}", coll, mats)
+        px, py = hinge / 1000, -y0 / 1000
+        obj.data.transform(Matrix.Translation((-px, -py, 0)))
+        obj.location = (px, py, 0)
+        door_motion.drive_rotation(obj, "fridge", sign * T)
+
+
+def appliance_box(m, f, kind, a0, a1, front_d, depth, z0, h):
+    """Countertop appliance standing on a tray; its front at `front_d` (frame distance), facing out."""
+    back = front_d - depth
+    if kind == "air_fryer":
+        f.box(a0, a1, back, front_d, z0, z0 + h, S["black"])
+        f.box(a0 + 20, a1 - 20, front_d, front_d + 25, z0 + 30, z0 + h * 0.6, S["black"])   # basket
+        f.box((a0 + a1) / 2 - 50, (a0 + a1) / 2 + 50, front_d + 25, front_d + 45, z0 + h * 0.6 - 60,
+              z0 + h * 0.6 - 30, S["chrome"])                                                 # handle
+        f.box(a0 + 40, a1 - 40, front_d, front_d + 3, z0 + h * 0.7, z0 + h - 30, S["glass_dark"])
+        return
+    f.box(a0, a1, back, front_d, z0 + 10, z0 + h, S["steel"])
+    for a in (a0 + 30, a1 - 50):
+        f.box(a, a + 20, back + 30, front_d - 30, z0, z0 + 10, S["black"])                   # feet
+    panel = 110 if kind == "oven" else 120
+    f.box(a0 + 20, a1 - panel - 10, front_d, front_d + 6, z0 + 40, z0 + h - 30, S["glass_dark"])  # door
+    f.box(a1 - panel, a1 - 15, front_d, front_d + 4, z0 + 40, z0 + h - 30, S["black"])           # controls
+    if kind == "oven":
+        f.box(a0 + 30, a1 - panel - 20, front_d + 6, front_d + 25, z0 + h - 60, z0 + h - 48, S["chrome"])
+    else:
+        f.box(a1 - panel - 30, a1 - panel - 18, front_d + 6, front_d + 25, z0 + 70, z0 + h - 70, S["chrome"])
+
+
+def appliance_tower(t, mats, coll):
+    """Full-height tall unit with open niches; each niche has a pull-out tray carrying removable
+    countertop appliances (oven, air fryer, microwave). Trays slide out on scene["door_kitchen_tray_<k>"]."""
+    m = Mesh()
+    f, (a0, a1), depth = unit_frame(m, t["rect"], t["front"])
+    H, kick, b = 2600, t["kick"], 18
+    f.box(a0, a0 + b, -depth, 0, kick, H, S["carcass"])                    # side panels
+    f.box(a1 - b, a1, -depth, 0, kick, H, S["carcass"])
+    f.box(a0, a1, -depth, -depth + b, kick, H, S["carcass"])               # back
+    f.box(a0, a1, -depth, -60, 0, kick, S["carcass"])                      # kick
+    d0, d1 = t["drawers"]
+    f.box(a0 + b, a1 - b, -depth + b, -18, kick, d1, S["carcass"])         # drawer box
+    drawers(f, a0, a1, kick, d1, t["drawer_count"])
+    z_top0, z_top1 = t["top_doors"]
+    f.box(a0 + b, a1 - b, -depth + b, -18, z_top0, H, S["carcass"])        # upper cabinet
+    doors(f, a0, a1, z_top0, H, 2, handle=(z_top0 + 40, z_top0 + 240))
+    edges = [d1] + [z for n in t["niches"] for z in n["z"]] + [z_top0]
+    for z in sorted(set(edges)):                                           # niche floors / ceilings
+        f.box(a0 + b, a1 - b, -depth + b, 0, z - 18, z, S["carcass"])
+        f.box(a0 + b, a1 - b, -2, 0, z - 18, z, S["wood"])                 # wood edge
+    for zz0, zz1 in zip([n["z"][1] for n in t["niches"]], [n["z"][0] for n in t["niches"]][1:] + [z_top0]):
+        if zz1 - zz0 > 20:                                                 # filler band between niches
+            f.box(a0 + b, a1 - b, -18, 0, zz0, zz1 - 18, S["front"])
+    for k, n in enumerate(t["niches"]):
+        z0, z1 = n["z"]
+        f.box(a0 + b + 20, a0 + b + 120, -depth + b, -depth + b + 2, z1 - 150, z1 - 80, S["black"])  # socket
+        tray = Mesh()
+        tf = Frame(tray, f.front, f.face)
+        tf.box(a0 + b + 5, a1 - b - 5, -depth + b + 20, -10, z0, z0 + 18, S["wood"])     # pull-out tray
+        tf.box(a0 + b + 5, a1 - b - 5, -12, -10 + 2, z0, z0 + 40, S["wood"])             # front lip
+        for it in n["items"]:
+            ia0, ia1 = it["a"]
+            appliance_box(tray, tf, it["kind"], ia0, ia1, -40, it["depth"], z0 + 18, it["height"])
+        obj = tray.finish(f"KT_Appliance tray {k + 1} ({n['label']})", coll, mats)
+        gid = f"kitchen_tray_{k + 1}"
+        door_motion.register_group(gid, f"Kitchen {n['label']} (pull out)", n.get("open", 0))
+        sx = {"west": -1, "east": 1}.get(f.front, 0) * n["pull"] / 1000
+        sy = {"north": 1, "south": -1}.get(f.front, 0) * n["pull"] / 1000
+        door_motion.drive(obj, gid, (sx, sy, 0))
+    m.finish("KT_Appliance tower (full height)", coll, mats)
 
 
 def hob_hood_sink(d, mk):
@@ -542,7 +683,6 @@ def main():
     jobs += [(carp, top_run(r, d["top_cabinets"], ceiling, Mesh)) for r in d["top_cabinets"]["runs"]]
     jobs += [
         (carp, c1_cupboard(d["c1"], Mesh)),
-        (appl, fridge(d["fridge"], Mesh)),
         (appl, hob_hood_sink(d, Mesh)),
         (appl, wine_cellar(d["c1"], Mesh)),
         (furn_k, island(d["island"], Mesh)),
@@ -555,6 +695,11 @@ def main():
         mesh.finish(f"KT_{name}", coll, mats)
         print(f"  built {name}")
 
+    door_motion.forget_groups("fridge")
+    fridge(d["fridge"], mats, appl)
+    door_motion.forget_groups("kitchen_tray_")
+    if "appliance_tower" in d:
+        appliance_tower(d["appliance_tower"], mats, carp)
     c1_glass(c, Mesh).finish("KT_C1 glass doors", carp, [mats[S["glass"]]])
     track, panels = partition(d["partition"], ceiling, Mesh)
     track.finish("KT_Glass partition track", carp, [mats[S["frame"]]])
