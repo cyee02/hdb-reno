@@ -5,6 +5,9 @@
 ## Must have
 - Dining table for **6 (3 per side)** north of the kitchen island, outside the glass partition: **1800 × 800, 750 high** (600 mm per person). Narrowed from 1800 × 900 on 2026-10-26 to free up space, lined up with the island, and shifted towards the glass (table y 4450–5250) like the HDB brochure, so there's a walkway behind the north chairs to the corridor.
 
+- **Living room** (owner's sketch 2026-11-06; rest of the layout from common HDB guidelines, `blender/data/living_room.json`): TV on the **west wall** on a full-height walnut slat feature wall, 65" TV (centre ~1115 high) over a 1700 × 400 floating console; **3-seater sofa** (2200 × 950) facing it with its back ~250 off the study glass (~2.6 m viewing distance); 1200 × 600 coffee table, 2000 × 2600 rug, accent armchair by the window, side table, floor lamp, plant.
+- **Foyer cupboard C2** (`blender/data/entrance.json`): full height, 400 deep, along the kitchen's west wall (1670 long). Left (north): shoe cabinet with an **oak key surface** at 1030 high and an open niche (hooks, LED) above. Right (south, by the door): **seat** to put on shoes (480 high with cushion) with 2 shoe drawers below and an open alcove with coat hooks above. Top cabinets to the ceiling across both.
+
 ## Nice to have
 - _TODO_
 
@@ -12,11 +15,11 @@
 - _TODO_
 
 ## Room-specific questions
-- TV wall: size of TV, feature wall?
-- Sofa size / orientation
+- TV wall: size of TV, feature wall? → modelled 65" on a walnut slat wall (west wall); confirm size
+- Sofa size / orientation → 3-seater facing the west-wall TV (2026-11-06)
 - Dining table seats how many? → 6 (decided 2026-10-26)
-- Keep or remove the suggested study walls?
-- Shoe cabinet / foyer storage at entrance
+- Keep or remove the suggested study walls? → glass partitions instead (2026-11-06)
+- Shoe cabinet / foyer storage at entrance → C2 with seat + key surface (2026-11-06)
 
 ## Materials & finishes
 | Element | Choice | Notes |

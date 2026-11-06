@@ -1,0 +1,50 @@
+{
+  "meta": {
+    "units": "mm, plan coords from floor_plan.json (x right, y down the page)",
+    "source": "Owner's sketch (2026-11-06): TV on the west wall, 3-seat sofa facing it with its back to the study. Rest of the layout from common HDB living-room guidelines.",
+    "room": "Living room interior x 100 (west wall face) - 3425 (study glass), y 100 (facade face) - 4720 (shelter wall face). The y 3350-4720 band stays clear as the walk from the foyer to the study / dining.",
+    "guidelines": "Viewing distance ~1.5-2.5 x screen diagonal (65\" = 1650 diag -> ~2.5-4 m; here ~2.6 m). TV centre ~1100 high (seated eye level). Coffee table ~400-450 from the sofa front. Rug big enough for the sofa's front legs to sit on it. >= 900 walkways."
+  },
+  "finishes": {
+    "fabric": [0.72, 0.70, 0.66],
+    "cushion": [0.80, 0.78, 0.74],
+    "oak": [0.62, 0.45, 0.30],
+    "walnut": [0.33, 0.22, 0.14],
+    "white": [0.95, 0.95, 0.94],
+    "rug": [0.82, 0.78, 0.70],
+    "accent": [0.55, 0.42, 0.30]
+  },
+  "tv_wall": {
+    "rect": [100, 800, 140, 3400],
+    "slat": 40, "slat_gap": 15,
+    "note": "Walnut fluted / slat feature panel, floor to ceiling, behind the TV (west wall)."
+  },
+  "console": {
+    "rect": [140, 1250, 540, 2950], "z": [250, 550], "front": "east", "drawers": 3,
+    "note": "Floating TV console 1700 x 400, white with oak top; robot vacuum can pass under."
+  },
+  "tv": {
+    "centre_y": 2100, "x": [150, 180], "size": [1440, 830], "bottom": 700,
+    "note": "65\" TV (1440 x 830), wall mounted; centre ~1115 high. Eye on the sofa is ~2.6 m away."
+  },
+  "sofa": {
+    "rect": [2100, 1000, 3050, 3200], "front": "west", "seats": 3,
+    "note": "3-seater 2200 x 950 facing the TV; back ~250 off the study glass so the panels slide freely."
+  },
+  "armchair": {
+    "rect": [1400, 180, 2150, 930], "front": "south", "seats": 1,
+    "note": "Accent / reading chair by the facade window, facing the coffee table (U-shaped conversation area)."
+  },
+  "coffee_table": {"rect": [1100, 1500, 1700, 2700], "height": 400,
+                   "note": "1200 x 600; 400 to the sofa front, 560 to the console."},
+  "rug": {"rect": [500, 800, 2500, 3400], "note": "2000 x 2600; the sofa's front legs sit on it."},
+  "side_table": {"at": [2620, 3450], "r": 220, "height": 550},
+  "floor_lamp": {"at": [2400, 330]},
+  "plant": {"at": [380, 400]},
+  "cameras": {
+    "liv_tv": {"loc": [3.2, -4.1, 1.65], "target": [0.3, -1.7, 1.0], "lens": 16,
+               "note": "from the study corner towards the TV wall"},
+    "liv_sofa": {"loc": [0.45, -0.45, 1.75], "target": [2.9, -2.7, 0.7], "lens": 15,
+                 "note": "from the TV wall / window corner towards the sofa and the study glass"}
+  }
+}
