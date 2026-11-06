@@ -1,0 +1,52 @@
+{
+  "meta": {
+    "units": "mm, plan coords from floor_plan.json (x right, y down the page)",
+    "source": "Owner (2026-11-06): Bedroom 2 queen bed, the other common bedroom (Bedroom 3 on the plan) a single bed; each with a 1-person wardrobe. Tables removed and both rooms re-planned the same way (2026-11-06): wardrobe on the door wall beside the door, bed headboard on the side wall, long side along the window wall.",
+    "rooms": "Bedroom 2 interior x 8900-11750, y 100-3275, door SW (x 8900-9800, opens against the west wall). Bedroom 3 interior x 5900-8750, y 100-3275, door SE (x 7850-8750, opens against the east wall). Both 2850 x 3175."
+  },
+  "finishes": {"oak": [0.62, 0.45, 0.3], "white": [0.95, 0.95, 0.94], "black": [0.04, 0.04, 0.04], "mattress": [0.96, 0.96, 0.95]},
+  "rooms": [
+    {
+      "id": "Bedroom2",
+      "bed": {
+        "rect": [9700, 225, 11750, 1825],
+        "head": "east",
+        "pillows": 2,
+        "duvet": [0.55, 0.62, 0.7],
+        "frame": [0.7, 0.68, 0.64],
+        "note": "Queen (mattress 1530 x 1900; frame 1600 x 2050 with headboard). Headboard on the Main Bedroom wall, long side along the window wall (125 gap for curtains). 850 aisle to the wardrobe, 800 walkway past the foot to the window corner."
+      },
+      "bedside": {"rect": [11350, 1845, 11750, 2245]},
+      "wardrobe": {
+        "rect": [9850, 2675, 11050, 3275],
+        "front": "north",
+        "doors": "oak",
+        "note": "1-person wardrobe 1200 W x 600 D, to the ceiling, 2 sliding doors, on the door wall right beside the door (clear of its swing). No table in this room."
+      }
+    },
+    {
+      "id": "Bedroom3",
+      "bed": {
+        "rect": [5900, 225, 7950, 1225],
+        "head": "west",
+        "pillows": 1,
+        "duvet": [0.8, 0.7, 0.55],
+        "frame": [0.7, 0.68, 0.64],
+        "note": "Single (mattress 910 x 1900; frame 1000 x 2050). Headboard on the Study wall, long side along the window wall (125 gap for curtains). ~1450 open floor to the wardrobe, 800 walkway past the foot."
+      },
+      "bedside": {"rect": [5900, 1245, 6300, 1645]},
+      "wardrobe": {
+        "rect": [6600, 2675, 7800, 3275],
+        "front": "north",
+        "doors": "white",
+        "note": "1-person wardrobe 1200 W x 600 D, to the ceiling, 2 sliding doors, on the door wall right beside the door (clear of its swing). No table in this room."
+      }
+    }
+  ],
+  "cameras": {
+    "bed2_view": {"loc": [9.3, -3.0, 2.1], "target": [11.0, -1.0, 0.6], "lens": 14, "note": "Bedroom 2 from the door: queen bed, aisle"},
+    "bed2_wardrobe": {"loc": [9.05, -0.3, 2.0], "target": [10.45, -2.9, 1.0], "lens": 14, "note": "Bedroom 2 from the window corner: wardrobe beside the door"},
+    "bed3_view": {"loc": [8.35, -3.0, 2.1], "target": [6.6, -0.8, 0.6], "lens": 14, "note": "Bedroom 3 from the door: single bed, open floor"},
+    "bed3_wardrobe": {"loc": [8.6, -0.3, 2.0], "target": [7.2, -2.9, 1.0], "lens": 14, "note": "Bedroom 3 from the window corner: wardrobe beside the door"}
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "meta": {
+    "units": "mm, plan coords from floor_plan.json (x right, y down the page)",
+    "source": "Owner's sketches (2026-11-06) for WC1 and WC2 + Alantz ceiling ventilator/light screenshot.",
+    "wc1": "Interior x 11235 (party wall face) - 13500 (east wall face), y 4525 (door wall face) - 6305 (window wall face). Sink + toilet on the party wall, bi-fold door x 11950-12650, window x 11880-12680, shower in the SE corner.",
+    "wc2": "Interior x 9170 (duct wall face) - 11085 (party wall face), y 4525 - 6305. Bi-fold door x 9240-9940 (NW), toilet on the party wall (north), sink on the south wall (west), shower on the party wall (south)."
+  },
+  "finishes": {
+    "tile": [0.70, 0.68, 0.64],
+    "frosted": [0.92, 0.94, 0.95],
+    "black": [0.04, 0.04, 0.04],
+    "fan_body": [0.95, 0.95, 0.94]
+  },
+  "half_wall": {
+    "rect": [12685, 5505, 12835, 6305],
+    "height": 1200,
+    "glass_top": 2000,
+    "note": "WC1 shower half wall (owner's sketch): 800 long off the window wall, 150 thick, cement + tiled to 1200 high, frosted glass panel above to 2000. Sits just east of the window, so the window stays out of the shower.",
+    "niches": {
+      "face": "east", "depth": 90, "z": [800, 1100],
+      "y": [[5560, 5880], [5930, 6250]],
+      "note": "Two tiled recessed niches (320 W x 300 H x 90 D) on the shower side for shampoo + body wash, at 800-1100 high."
+    }
+  },
+  "showers": [
+    {"room": "WC1", "wall_face": 6305, "facing": "north", "at": 13170,
+     "note": "Rain shower set on the window wall in the SE corner (behind the half wall), shower zone ~665 W x 800 D, open to the north."},
+    {"room": "WC2", "wall_face": 11085, "facing": "west", "at": 5900,
+     "note": "Rain shower set on the party wall, south end (owner's sketch), clear of the toilet at the north end."}
+  ],
+  "fan_lights": [
+    {"room": "WC1", "at": [12400, 5400],
+     "why": "Centre of the room's free floor between the toilet and the shower: lights the whole WC, ~1 m from the shower head so it dries the wet area without sitting in the spray, >= 900 from every wall for the air to circulate, clear of the bi-fold door (folds near the north wall) and the half wall."},
+    {"room": "WC2", "at": [10150, 5400],
+     "why": "Centre of WC2: between the toilet (NE), sink (SW) and shower (SE), ~1 m from the shower head, clear of the bi-fold door in the NW corner."}
+  ],
+  "fan_light": {"diameter": 300, "height": 160,
+                "note": "Alantz-style ceiling ventilator + LED light (~300 dia, ~160 deep, sizes assumed - check the model's spec). Surface-mounted on the ceiling slab, needs a switched power point above the ceiling position."},
+  "cameras": {
+    "wc1_shower": {"loc": [11.95, -4.65, 2.2], "target": [13.05, -6.1, 1.0], "lens": 13,
+                   "note": "WC1 from the door: window, half wall, niches, shower"},
+    "wc1_room": {"loc": [13.35, -4.7, 1.9], "target": [11.6, -6.0, 1.7], "lens": 12,
+                 "note": "WC1 from the NE corner: toilet, sink, window, ventilator"},
+    "wc2_room": {"loc": [9.3, -4.65, 2.1], "target": [10.9, -6.0, 1.5], "lens": 13,
+                 "note": "WC2 from the door corner: toilet, shower, ventilator"}
+  }
+}
