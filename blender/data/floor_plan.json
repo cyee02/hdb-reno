@@ -23,11 +23,11 @@
     {"name": "Main Bedroom", "color": [0.74, 0.80, 0.94], "label_at": [13475, 2200], "rects": [[11825, 0, 15125, 4450], [10725, 3350, 11825, 4450]]},
     {"name": "Corridor", "color": [0.90, 0.88, 0.84], "label_at": [9650, 3900], "rects": [[8530, 3350, 10725, 4450]]},
     {"name": "Bath/WC 2", "color": [0.75, 0.90, 0.92], "label_at": [10200, 5550], "rects": [[9170, 4450, 11160, 6380]]},
-    {"name": "Bath/WC 1", "color": [0.75, 0.90, 0.92], "label_at": [12750, 5550], "rects": [[11160, 4450, 13570, 6380]]},
+    {"name": "Bath/WC 1", "color": [0.75, 0.90, 0.92], "label_at": [12750, 5550], "rects": [[11160, 4450, 13500, 6380]]},
     {"name": "Kitchen", "color": [0.95, 0.83, 0.70], "label_at": [6300, 7450], "rects": [[4100, 6000, 8530, 8900]]},
     {"name": "Service Yard", "label": "Service\nYard", "color": [0.88, 0.85, 0.80], "label_at": [9255, 7650], "rects": [[8530, 6380, 9980, 8900]]},
     {"name": "Household Shelter", "label": "Household\nShelter", "color": [0.70, 0.70, 0.70], "label_at": [825, 6250], "label_size": 0.2, "rects": [[25, 4845, 1625, 7655]]},
-    {"name": "Air-con Ledge", "label": "Air-con\nLedge", "color": [0.65, 0.65, 0.65], "label_at": [12300, 6820], "rects": [[10770, 6380, 13860, 7250]]}
+    {"name": "Air-con Ledge", "label": "Air-con\nLedge", "color": [0.65, 0.65, 0.65], "label_at": [12300, 6820], "rects": [[10770, 6380, 13790, 7250]]}
   ],
   "columns": [
     {"id": "fin_living_west", "rect": [-580, -450, 580, 100]},
@@ -45,7 +45,7 @@
        {"type": "window", "at": [12000, 14750], "cols": 5}
      ]},
     {"id": "facade_east_main", "from": [15125, 0], "to": [15125, 4450], "thickness": 200, "side": "out"},
-    {"id": "main_bed_south", "from": [13570, 4450], "to": [15125, 4450], "thickness": 200, "side": "out"},
+    {"id": "main_bed_south", "from": [13500, 4450], "to": [15125, 4450], "thickness": 200, "side": "out"},
     {"id": "living_west", "from": [0, 0], "to": [0, 4720], "thickness": 200, "side": "out"},
 
     {"id": "study_bed3", "from": [5825, 0], "to": [5825, 3350], "thickness": 150},
@@ -59,7 +59,7 @@
     {"id": "bed2_south", "from": [8825, 3350], "to": [11825, 3350], "thickness": 150,
      "openings": [{"type": "door", "id": "bedroom2", "label": "Bedroom 2 door", "at": [8900, 9800], "hinge": "start", "swing": -1}]},
 
-    {"id": "bath_north", "from": [8530, 4450], "to": [13570, 4450], "thickness": 150,
+    {"id": "bath_north", "from": [8530, 4450], "to": [13500, 4450], "thickness": 150,
      "openings": [
        {"type": "door", "style": "bifold", "id": "wc2", "label": "WC 2 bi-fold door", "at": [9240, 9940], "hinge": "start", "swing": 1,
         "note": "Per HDB plan the WC2 bi-fold starts right at the WC2 west wall (moved ~560 west on 2026-10-25)."},
@@ -67,12 +67,14 @@
         "note": "Per HDB plan the WC1 bi-fold sits ~800 from the WC1 west wall (moved 500 west on 2026-10-25), leaving ~920 inside to the left (east) as you enter."}
      ]},
     {"id": "bath_party", "from": [11160, 4450], "to": [11160, 6380], "thickness": 150},
-    {"id": "bath_south", "from": [8530, 6380], "to": [13570, 6380], "thickness": 150,
+    {"id": "bath_south", "from": [8530, 6380], "to": [13500, 6380], "thickness": 150,
      "openings": [
        {"type": "window", "at": [10550, 10950], "sill": 1600, "head": 2050, "cols": 1, "transom": 0},
-       {"type": "window", "at": [12100, 12900], "sill": 1300, "head": 2100, "cols": 2, "transom": 0}
+       {"type": "window", "at": [11880, 12680], "sill": 1300, "head": 2100, "cols": 2, "transom": 0,
+        "note": "WC1 window re-measured on the HDB plan (2026-11-06): x ~11880-12680, west of the new shower half wall."}
      ]},
-    {"id": "bath_east", "from": [13685, 4450], "to": [13685, 7250], "thickness": 230, "side": "out"},
+    {"id": "bath_east", "from": [13615, 4450], "to": [13615, 7250], "thickness": 230, "side": "out",
+     "note": "Inner face 13500: WC1 is 2250 wide on the HDB plan (party wall face 11235 -> 13500 ~ 2265), and 1625 from here to the facade."},
     {"id": "rc_wall_bath2", "from": [8812, 4450], "to": [8812, 6380], "thickness": 715, "extend": false,
      "note": "Thick solid wall on the HDB plan (likely structural / pipe duct) - keep. West face lines up with the kitchen/yard wall."},
 
@@ -97,7 +99,7 @@
      "openings": [{"type": "door", "id": "main_door", "label": "Main entrance door", "at": [2425, 3425], "hinge": "start", "swing": -1, "main": true}]}
   ],
   "ledges": [
-    {"id": "aircon_parapet_s", "from": [10770, 7250], "to": [13800, 7250], "thickness": 100, "height": 1000},
+    {"id": "aircon_parapet_s", "from": [10770, 7250], "to": [13730, 7250], "thickness": 100, "height": 1000},
     {"id": "yard_ledge", "from": [10650, 6380], "to": [10650, 8900], "thickness": 100, "height": 1000}
   ],
   "fixtures": [

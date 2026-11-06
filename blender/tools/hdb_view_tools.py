@@ -5,6 +5,10 @@
 - Shift+Alt+P  jump to the plan view: straight down from above (orthographic), north up,
                framed on the whole flat - like the HDB floor plan.
 - Shift+Alt+O  open / close all doors smoothly (swing doors, WC bi-folds, yard door, kitchen glass).
+- Shift+Alt+F  first-person walk: eye at 1.6 m, you can't walk through or climb onto walls,
+               furniture, glass or closed doors. WASD / arrows move (Shift = faster), mouse looks,
+               E or click = open/close the door you look at, H (or Alt+W) = hide/show walls,
+               scroll / trackpad / + - = zoom (Z resets), Esc / Enter / right-click = stop.
 Viewport only - renders are not affected (except the doors, which render where you leave them).
 
 Doors section of the panel: a 0-1 slider per door (drag it), close (<) / open (>) buttons
@@ -17,18 +21,21 @@ position is driven by scene["door_<id>"]; the list of doors is scene["hdb_doors"
 Install: Edit > Preferences > Add-ons > Install from Disk... > this file, then enable it.
 """
 import json
+import math
 import time
 
 import bpy
-from mathutils import Quaternion, Vector
+import numpy as np
+from mathutils import Euler, Quaternion, Vector
+from mathutils.bvhtree import BVHTree
 
 bl_info = {
     "name": "HDB Reno View Tools",
     "author": "hdb-reno",
-    "version": (1, 2, 0),
+    "version": (1, 3, 0),
     "blender": (4, 2, 0),
-    "location": "3D Viewport > Alt+W / Shift+Alt+P / Shift+Alt+O, N panel > HDB Reno",
-    "description": "Toggle the flat's walls; jump to the plan view; open and close doors",
+    "location": "3D Viewport > Alt+W / Shift+Alt+P / Shift+Alt+O / Shift+Alt+F, N panel > HDB Reno",
+    "description": "Toggle the flat's walls; plan view; open and close doors; first-person walk",
     "category": "3D View",
 }
 
@@ -60,19 +67,27 @@ class HDB_OT_toggle_walls(bpy.types.Operator):
     bl_description = "Show/hide the flat's walls and windows in the viewport"
 
     def execute(self, context):
-        lc = find_layer_collection(context.view_layer.layer_collection, WALLS)
-        if not lc:
+        hide = toggle_walls(context)
+        if hide is None:
             self.report({"WARNING"}, f"Collection '{WALLS}' not found")
             return {"CANCELLED"}
-        hide = not lc.hide_viewport
-        lc.hide_viewport = hide  # the eye icon in the Outliner
-        openings = bpy.data.collections.get(OPENINGS)
-        if openings:
-            for obj in openings.objects:
-                if obj.name.startswith(WINDOW_PREFIXES):
-                    obj.hide_set(hide, view_layer=context.view_layer)
         self.report({"INFO"}, "Walls hidden" if hide else "Walls shown")
         return {"FINISHED"}
+
+
+def toggle_walls(context):
+    """Hide/show the walls + window frames. Returns True if now hidden, None if no walls."""
+    lc = find_layer_collection(context.view_layer.layer_collection, WALLS)
+    if not lc:
+        return None
+    hide = not lc.hide_viewport
+    lc.hide_viewport = hide  # the eye icon in the Outliner
+    openings = bpy.data.collections.get(OPENINGS)
+    if openings:
+        for obj in openings.objects:
+            if obj.name.startswith(WINDOW_PREFIXES):
+                obj.hide_set(hide, view_layer=context.view_layer)
+    return hide
 
 
 def flat_bounds():
@@ -281,6 +296,282 @@ class HDB_OT_doors_clear_anim(bpy.types.Operator):
         return {"FINISHED"}
 
 
+# ---------- first-person walk ----------
+
+EYE_HEIGHT = 1.6                     # m above the floor; you stay on the floor (no climbing)
+BODY_RADIUS = 0.2                    # m kept clear of walls / furniture / glass
+PROBE_HEIGHTS = (0.2, 0.6, 1.1, 1.7) # knee .. head: anything taller than ~0.15 m blocks you
+WALK_SPEED, RUN_SPEED = 1.4, 3.0     # m/s (Shift = run)
+STEP = 0.05                          # m per collision check, so fast moves can't tunnel
+LOOK_SPEED = 0.0025                  # radians per pixel
+LENS_DEFAULT, LENS_MIN, LENS_MAX = 24.0, 10.0, 120.0
+REACH = 2.5                          # m: how far away a door can be opened
+START = (2.9, -6.9)                  # foyer, just inside the main door (Blender X, Y)
+SKIP_COLLECTIONS = {"Cameras", "Flat.Labels", "Flat.Floors"}
+MOVE_KEYS = {"W": (1, 0), "UP_ARROW": (1, 0), "S": (-1, 0), "DOWN_ARROW": (-1, 0),
+             "A": (0, -1), "LEFT_ARROW": (0, -1), "D": (0, 1), "RIGHT_ARROW": (0, 1)}
+
+
+def _blocks(obj):
+    """Meshes you can bump into: skip floors / rugs (< 0.1 m) and ceiling fittings (> 2.2 m)."""
+    if obj.type != "MESH" or not obj.data.polygons:
+        return False
+    if any(c.name in SKIP_COLLECTIONS for c in obj.users_collection):
+        return False
+    zs = [(obj.matrix_world @ Vector(c)).z for c in obj.bound_box]
+    return max(zs) > 0.1 and min(zs) < 2.2
+
+
+def _tree(objs, depsgraph=None):
+    """BVH of the objects' triangles in world space + the owning object per triangle."""
+    verts, tris, owner, base = [], [], [], 0
+    for obj in objs:
+        me = obj.data
+        mw = obj.evaluated_get(depsgraph).matrix_world if depsgraph else obj.matrix_world
+        co = np.empty(len(me.vertices) * 3, np.float64)
+        me.vertices.foreach_get("co", co)
+        m = np.array(mw)
+        co = co.reshape(-1, 3) @ m[:3, :3].T + m[:3, 3]
+        if hasattr(me, "calc_loop_triangles"):
+            me.calc_loop_triangles()
+        t = np.empty(len(me.loop_triangles) * 3, np.int64)
+        me.loop_triangles.foreach_get("vertices", t)
+        verts.append(co)
+        tris.append(t.reshape(-1, 3) + base)
+        owner += [obj] * (len(t) // 3)
+        base += len(co)
+    if not owner:
+        return None, []
+    return BVHTree.FromPolygons(np.vstack(verts).tolist(), np.vstack(tris).tolist()), owner
+
+
+class HDB_OT_walk(bpy.types.Operator):
+    bl_idname = "hdb.walk"
+    bl_label = "First-Person Walk"
+    bl_description = ("Walk through the flat at eye height without passing through walls, furniture "
+                      "or closed doors. WASD move, mouse look, E / click door, H walls, scroll zoom, Esc stop")
+
+    @classmethod
+    def poll(cls, context):
+        return context.area is not None and context.area.type == "VIEW_3D"
+
+    # --- collision ---
+    def _build_static(self, context):
+        objs = [o for o in context.scene.objects if _blocks(o) and "door_group" not in o]
+        self.static, _ = _tree(objs)
+        self.door_objs = [o for o in context.scene.objects if "door_group" in o and _blocks(o)]
+        self.door_sig = None
+        self._update_doors(context)
+
+    def _update_doors(self, context):
+        scene = context.scene
+        sig = tuple(round(float(scene.get(door_key(g), 0)), 4) for g in door_groups(scene))
+        if sig != self.door_sig:
+            self.door_sig = sig
+            self.doors, self.door_owner = _tree(self.door_objs, context.evaluated_depsgraph_get())
+
+    def _blocked(self, x, y):
+        for z in PROBE_HEIGHTS:
+            p = Vector((x, y, z))
+            for tree in (self.static, self.doors):
+                if tree and tree.find_nearest(p, BODY_RADIUS)[0] is not None:
+                    return True
+        return False
+
+    def _clearance(self, x, y):
+        """Distance to the nearest thing you could bump into (capped at 1 m)."""
+        best = 1.0
+        for z in PROBE_HEIGHTS:
+            p = Vector((x, y, z))
+            for tree in (self.static, self.doors):
+                if tree:
+                    d = tree.find_nearest(p, best)[3]
+                    if d is not None:
+                        best = min(best, d)
+        return best
+
+    def _move(self, dx, dy):
+        dist = math.hypot(dx, dy)
+        n = max(1, math.ceil(dist / STEP))
+        for _ in range(n):
+            x, y, sx, sy = self.eye.x, self.eye.y, dx / n, dy / n
+            if self._blocked(x, y):
+                # Started too close to something (or a door swung into you): only allow
+                # moves that get you more room, so you step out instead of through it.
+                here = self._clearance(x, y)
+                for mx, my in ((sx, sy), (sx, 0.0), (0.0, sy)):
+                    if self._clearance(x + mx, y + my) > here:
+                        self.eye.x, self.eye.y = x + mx, y + my
+                        break
+                continue
+            for mx, my in ((sx, sy), (sx, 0.0), (0.0, sy)):   # slide along walls
+                if not self._blocked(x + mx, y + my):
+                    self.eye.x, self.eye.y = x + mx, y + my
+                    break
+
+    # --- view ---
+    def _rotation(self):
+        return Euler((math.pi / 2 + self.pitch, 0.0, self.yaw)).to_quaternion()
+
+    def _apply_view(self, context):
+        r3d = context.space_data.region_3d
+        q = self._rotation()
+        r3d.view_perspective = "PERSP"
+        r3d.view_rotation = q
+        r3d.view_distance = 0.01
+        r3d.view_location = self.eye + q @ Vector((0.0, 0.0, -0.01))
+        context.area.tag_redraw()
+
+    def _header(self, context):
+        walls = "shown" if not walls_hidden(context) else "hidden"
+        msg = (f"Walk  |  WASD/arrows move (Shift run)  |  mouse look  |  E / click: door  |  "
+               f"H: walls ({walls})  |  scroll/+/-: zoom {context.space_data.lens:.0f} mm (Z reset)  |  Esc: stop")
+        if self.note:
+            msg += f"  |  {self.note}"
+        context.area.header_text_set(msg)
+
+    # --- doors ---
+    def _door_ahead(self):
+        origin = self.eye.copy()
+        fwd = self._rotation() @ Vector((0.0, 0.0, -1.0))
+        wall = REACH
+        if self.static:
+            loc, _n, _i, d = self.static.ray_cast(origin, fwd, REACH)
+            if loc is not None:
+                wall = d
+        if self.doors:
+            loc, _n, i, d = self.doors.ray_cast(origin, fwd, REACH)
+            if loc is not None and d <= wall + 0.05:
+                return self.door_owner[i].get("door_group")
+            # Not aimed exactly: nearest door within reach of a point just ahead at hand height.
+            hand = Vector((origin.x + fwd.x * 0.6, origin.y + fwd.y * 0.6, 1.0))
+            loc, _n, i, d = self.doors.find_nearest(hand, 0.9)
+            if loc is not None:
+                return self.door_owner[i].get("door_group")
+        return None
+
+    def _toggle_door(self, context):
+        scene = context.scene
+        if door_fcurves(scene):
+            self.note = "doors are keyframed - Clear Animation first"
+            return
+        gid = self._door_ahead()
+        if not gid or door_key(gid) not in scene:
+            self.note = "no door in reach - look at one"
+            return
+        opened = abs(float(scene[door_key(gid)])) > 0.5
+        move_doors(scene, [gid], 0.0 if opened else open_value(scene, gid))
+        self.note = f"{'closing' if opened else 'opening'}: {door_groups(scene).get(gid, gid)}"
+
+    # --- modal ---
+    def invoke(self, context, event):
+        space = context.space_data
+        r3d = space.region_3d
+        self.region = next(r for r in context.area.regions if r.type == "WINDOW")
+        if r3d.view_perspective == "CAMERA":
+            r3d.view_perspective = "PERSP"
+        q = r3d.view_rotation
+        eye = r3d.view_location + q @ Vector((0.0, 0.0, r3d.view_distance))
+        fwd = q @ Vector((0.0, 0.0, -1.0))
+        b = flat_bounds()
+        inside = (b and r3d.view_perspective == "PERSP" and b[0] < eye.x < b[1]
+                  and b[2] < eye.y < b[3] and eye.z < 3.0)
+        if inside:
+            self.eye = Vector((eye.x, eye.y, EYE_HEIGHT))
+            self.yaw = math.atan2(-fwd.x, fwd.y)
+            self.pitch = max(-0.6, min(0.6, math.asin(max(-1.0, min(1.0, fwd.z)))))
+        else:
+            self.eye = Vector((START[0], START[1], EYE_HEIGHT))
+            self.yaw, self.pitch = 0.0, 0.0           # facing north, into the flat
+        self.saved = (space.lens, space.clip_start)
+        space.lens, space.clip_start = LENS_DEFAULT, 0.02
+        self._build_static(context)
+        self.keys, self.note = set(), ""
+        self.last = time.monotonic()
+        self.timer = context.window_manager.event_timer_add(1 / 60, window=context.window)
+        context.window.cursor_modal_set("NONE")
+        self._center(context)
+        self._apply_view(context)
+        self._header(context)
+        context.window_manager.modal_handler_add(self)
+        return {"RUNNING_MODAL"}
+
+    def _center(self, context):
+        self.cx = self.region.x + self.region.width // 2
+        self.cy = self.region.y + self.region.height // 2
+        context.window.cursor_warp(self.cx, self.cy)
+
+    def _zoom(self, context, factor):
+        space = context.space_data
+        space.lens = max(LENS_MIN, min(LENS_MAX, space.lens * factor))
+
+    def _finish(self, context):
+        context.window_manager.event_timer_remove(self.timer)
+        context.window.cursor_modal_restore()
+        context.area.header_text_set(None)
+        space = context.space_data
+        space.lens, space.clip_start = self.saved
+        context.area.tag_redraw()
+        return {"FINISHED"}
+
+    def modal(self, context, event):
+        t, v = event.type, event.value
+        if t in {"ESC", "RIGHTMOUSE", "RET", "NUMPAD_ENTER"} and v == "PRESS":
+            return self._finish(context)
+
+        if t == "TIMER":
+            now = time.monotonic()
+            dt, self.last = min(now - self.last, 0.1), now
+            self._update_doors(context)
+            f = sum(MOVE_KEYS[k][0] for k in self.keys)
+            s = sum(MOVE_KEYS[k][1] for k in self.keys)
+            if f or s:
+                speed = RUN_SPEED if event.shift else WALK_SPEED
+                norm = math.hypot(f, s)
+                fx, fy = -math.sin(self.yaw), math.cos(self.yaw)      # forward
+                rx, ry = math.cos(self.yaw), math.sin(self.yaw)       # right
+                step = speed * dt / norm
+                self._move((fx * f + rx * s) * step, (fy * f + ry * s) * step)
+            self._apply_view(context)
+            return {"RUNNING_MODAL"}
+
+        if t == "MOUSEMOVE":
+            dx, dy = event.mouse_x - self.cx, event.mouse_y - self.cy
+            if dx or dy:
+                self.yaw -= dx * LOOK_SPEED
+                self.pitch = max(-1.4, min(1.4, self.pitch + dy * LOOK_SPEED))
+                context.window.cursor_warp(self.cx, self.cy)
+            return {"RUNNING_MODAL"}
+
+        if t in MOVE_KEYS and not (t == "W" and event.alt):
+            if v == "PRESS":
+                self.keys.add(t)
+            elif v == "RELEASE":
+                self.keys.discard(t)
+            return {"RUNNING_MODAL"}
+
+        if v == "PRESS":
+            if t in {"E", "F", "LEFTMOUSE"}:
+                self._toggle_door(context)
+            elif t == "H" or (t == "W" and event.alt):
+                hidden = toggle_walls(context)
+                self.note = "" if hidden is None else ("walls hidden" if hidden else "walls shown")
+            elif t in {"WHEELUPMOUSE", "NUMPAD_PLUS", "EQUAL"}:
+                self._zoom(context, 1.1)
+            elif t in {"WHEELDOWNMOUSE", "NUMPAD_MINUS", "MINUS"}:
+                self._zoom(context, 1 / 1.1)
+            elif t == "Z":
+                context.space_data.lens = LENS_DEFAULT
+            self._header(context)
+        elif t == "TRACKPADPAN":                                       # two-finger scroll
+            self._zoom(context, 1.01 ** (event.mouse_y - event.mouse_prev_y))
+            self._header(context)
+        elif t == "TRACKPADZOOM":                                      # pinch
+            self._zoom(context, 1.01 ** (event.mouse_x - event.mouse_prev_x))
+            self._header(context)
+        return {"RUNNING_MODAL"}
+
+
 class HDB_PT_view_tools(bpy.types.Panel):
     bl_label = "HDB Reno"
     bl_space_type = "VIEW_3D"
@@ -295,6 +586,8 @@ class HDB_PT_view_tools(bpy.types.Panel):
         self.layout.label(text="Hotkey: Alt+W")
         self.layout.operator(HDB_OT_plan_view.bl_idname, text="Plan View", icon="VIEW_ORTHO")
         self.layout.label(text="Hotkey: Shift+Alt+P")
+        self.layout.operator(HDB_OT_walk.bl_idname, text="Walk (First Person)", icon="MOD_DYNAMICPAINT")
+        self.layout.label(text="Hotkey: Shift+Alt+F")
 
         scene = context.scene
         groups = door_groups(scene)
@@ -336,7 +629,7 @@ addon_keymaps = []
 
 
 CLASSES = (HDB_OT_toggle_walls, HDB_OT_plan_view, HDB_OT_door_move, HDB_OT_doors_toggle,
-           HDB_OT_doors_keyframe, HDB_OT_doors_clear_anim, HDB_PT_view_tools)
+           HDB_OT_doors_keyframe, HDB_OT_doors_clear_anim, HDB_OT_walk, HDB_PT_view_tools)
 
 
 def register():
@@ -350,6 +643,8 @@ def register():
         kmi = km.keymap_items.new(HDB_OT_plan_view.bl_idname, "P", "PRESS", alt=True, shift=True)
         addon_keymaps.append((km, kmi))
         kmi = km.keymap_items.new(HDB_OT_doors_toggle.bl_idname, "O", "PRESS", alt=True, shift=True)
+        addon_keymaps.append((km, kmi))
+        kmi = km.keymap_items.new(HDB_OT_walk.bl_idname, "F", "PRESS", alt=True, shift=True)
         addon_keymaps.append((km, kmi))
 
 
