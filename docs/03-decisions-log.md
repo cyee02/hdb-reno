@@ -36,4 +36,5 @@ Newest first. One entry per decision.
 | 2026-10-25 | Model | Master bedroom door moved to its HDB-plan position across the corridor (was on the corridor end wall) | Door looked misaligned | — |
 | 2026-10-25 | Bathrooms | Both WC doors (Bath/WC 1 & 2) to be bi-fold doors; bedroom doors stay normal swing doors | Bi-fold saves swing space in small WCs; matches HDB 3D render | — |
 | 2026-10-25 | Model | Corrected 3D model against HDB 3D render: shelter flush with living wall, thick wall by WC 2 trimmed and aligned, kitchen window removed, façade fins + gridded windows, WC windows, service-yard glass door, WC toilets and sinks added | Model looked out of place vs the real layout | — |
+| 2026-10-24 | Base layout | Model corrections: kitchen has no windows; both WC doors are bi-fold; duct block beside Bath 2 aligned to the adjacent walls | Match the actual unit (owner feedback on v001 renders) | — |
 | 2026-10-25 | Project | Set up repo + Blender model from HDB 5-room plan | Single place to track requirements and visualise the layout | — |
