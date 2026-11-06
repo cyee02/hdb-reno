@@ -1,0 +1,36 @@
+{
+  "meta": {
+    "units": "mm, plan coords from floor_plan.json (x right, y down the page)",
+    "source": "Owner's sketch (2026-11-06): glass partition on both open sides (like the kitchen), panels hide at the hatched spots; two 1200 x 600 study tables along the Bedroom 3 wall.",
+    "room": "Study interior x 3425 (glass, living side) - 5750 (Bedroom 3 wall face), y 100 (facade face) - 3350 (glass, dining side)."
+  },
+  "finishes": {
+    "frame": [0.03, 0.03, 0.03],
+    "oak": [0.62, 0.45, 0.30],
+    "chair": [0.12, 0.12, 0.13],
+    "books": [[0.55, 0.20, 0.15], [0.20, 0.32, 0.50], [0.85, 0.80, 0.68], [0.25, 0.40, 0.30], [0.15, 0.15, 0.15]]
+  },
+  "partitions": [
+    {"id": "study_glass_west", "label": "Study glass partition (living side)",
+     "axis": "y", "at": 3425, "span": [100, 3275], "panels": 6, "tracks": 6, "track_gap": 33,
+     "overlap": 30, "frame": 22, "stack": "start", "open": 0.0,
+     "note": "Living side, facade to the corner. 6 panels on 6 tracks; open, they all slide north and stack (~560 wide) against the facade wall between the living and study windows (hatched area on the sketch). Stops 75 short of the corner so it clears the south tracks."},
+    {"id": "study_glass_south", "label": "Study glass partition (dining side)",
+     "axis": "x", "at": 3350, "span": [3315, 5750], "panels": 4, "tracks": 4, "track_gap": 33,
+     "overlap": 30, "frame": 22, "stack": "end", "open": 0.0,
+     "note": "Dining side, corner to the Bedroom 3 wall. 4 panels on 4 tracks; open, they slide east and stack (~630 wide) against the Bedroom 3 wall (hatched area on the sketch). Starts at the outer face of the west tracks so the corner is closed."}
+  ],
+  "desks": [
+    {"rect": [5150, 450, 5750, 1650], "height": 750},
+    {"rect": [5150, 1650, 5750, 2850], "height": 750}
+  ],
+  "desk_note": "Two 1200 x 600 study tables end to end along the Bedroom 3 wall, facing the wall; ~500 clear to the stacked south glass.",
+  "chairs": [[4720, 1050], [4720, 2250]],
+  "shelf": {"rect": [5500, 450, 5750, 2850], "z": 1500, "note": "Suggested floating book shelf above the tables (not on the sketch)."},
+  "cameras": {
+    "study_desk": {"loc": [3.65, -3.05, 1.7], "target": [5.6, -1.3, 0.85], "lens": 15,
+                   "note": "inside the study from the SW corner, towards the tables"},
+    "study_glass": {"loc": [1.6, -4.45, 1.6], "target": [4.6, -1.9, 1.1], "lens": 16,
+                    "note": "from the living / foyer side: both glass partitions"}
+  }
+}

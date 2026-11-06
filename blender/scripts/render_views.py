@@ -3,6 +3,8 @@
 Run after build_flat.py:
     Blender -b -P blender/scripts/build_flat.py -P blender/scripts/render_views.py
 Set env RENDER_TAG (default v001) to version the output filenames.
+Set env RENDER_ONLY to a comma-separated list of view-name prefixes (e.g. "liv_,study_,foy_")
+to render just those views.
 """
 import json
 import math
@@ -120,7 +122,10 @@ def main():
         look_at(views[key], Vector(c["target"]))
 
     os.makedirs(OUT, exist_ok=True)
+    only = [p for p in os.environ.get("RENDER_ONLY", "").split(",") if p]
     for key, cam in views.items():
+        if only and not any(key.startswith(p) for p in only):
+            continue
         scene.camera = cam
         scene.render.filepath = os.path.join(OUT, f"{TAG}_{key}.png")
         bpy.ops.render.render(write_still=True)

@@ -1,0 +1,36 @@
+{
+  "meta": {
+    "units": "mm, plan coords from floor_plan.json (x right, y down the page)",
+    "source": "Owner's sketch (2026-11-06): cupboard C2 in the foyer with a seat (to put on shoes) and a surface (keys etc.).",
+    "foyer": "Foyer x 1750 (shelter wall face) - 4100 (kitchen west wall face), y 4720 - 7580 (entrance wall face). Main door x 2425-3425, opens inwards, hinge on the shelter side."
+  },
+  "finishes": {
+    "carcass": [0.93, 0.93, 0.91],
+    "front": [0.95, 0.95, 0.94],
+    "oak": [0.62, 0.45, 0.30],
+    "cushion": [0.45, 0.47, 0.44]
+  },
+  "c2": {
+    "rect": [3700, 5905, 4100, 7575], "front": "west",
+    "note": "Full height, 400 deep, along the kitchen's west wall (1670 long, wall end to entrance wall). Front at x 3700 -> 1950 clear foyer; ~275 past the main door's frame. Seen from the foyer: shoe cabinet + key surface on the left (north), shoe-on seat on the right (south, by the door), top cabinets to the ceiling across both.",
+    "kick": 100,
+    "split": 6585,
+    "top_cabinets": {"z": [1800, 2600], "doors": 4},
+    "surface_column": {
+      "shoe_cabinet": {"z": [100, 1000], "doors": 2, "shelves": [300, 500, 700]},
+      "surface": {"z": [1000, 1030], "projects": 60, "note": "Oak key / wallet / mail surface at 1030 high, 60 proud of the doors."},
+      "niche": {"z": [1030, 1800], "led": true, "hooks": 3, "note": "Open niche with oak back, LED strip and key hooks."}
+    },
+    "seat_column": {
+      "drawers": {"z": [100, 400], "count": 2, "note": "Shoe drawers under the seat."},
+      "seat": {"z": [400, 430], "projects": 80, "cushion": 50, "note": "Seat 480 high (with cushion), 480 deep; for putting on shoes."},
+      "alcove": {"z": [480, 1800], "hooks": 3, "hook_z": 1600, "note": "Open alcove above the seat: oak back, coat / bag hooks, LED."}
+    }
+  },
+  "cameras": {
+    "foy_c2": {"loc": [2.2, -5.85, 1.6], "target": [3.9, -6.85, 0.95], "lens": 14,
+               "note": "from the foyer between the open shelter and main doors, facing C2"},
+    "foy_door": {"loc": [3.0, -4.75, 1.7], "target": [3.25, -7.4, 0.85], "lens": 14,
+                 "note": "from the living room end, towards the main door and C2"}
+  }
+}
